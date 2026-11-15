@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>登录 - Hyper 账号</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2064%2064'%20width%3D'64'%20height%3D'64'%3E%3Crect%20x%3D'6'%20y%3D'6'%20width%3D'52'%20height%3D'52'%20rx%3D'13'%20fill%3D'%23E60023'%2F%3E%3Ctext%20x%3D'32'%20y%3D'46'%20font-family%3D'Arial%20Black%2CArial%2Csans-serif'%20font-weight%3D'900'%20font-size%3D'40'%20text-anchor%3D'middle'%20fill%3D'%23fff'%3EH%3C%2Ftext%3E%3C%2Fsvg%3E">
+<style>
+* { box-sizing: border-box; }
+:root { --brand: #E60023; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: 'Roboto', 'Helvetica Neue', Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  color: #202124;
+  background: #fff;
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+}
+.main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 24px; }
+.card {
+  width: 450px; max-width: 100%;
+  border: 1px solid #dadce0; border-radius: 8px;
+  padding: 48px 40px 36px; text-align: center;
+}
+.glogo {
+  width: 150px; height: auto; margin: 0 auto 18px; display: block;
+  color: var(--brand);
+  animation: logo-in .55s cubic-bezier(.2,.8,.2,1);
+  transition: transform .3s cubic-bezier(.2,.8,.2,1), filter .3s ease, color .3s ease;
+}
+.glogo:hover { transform: translateY(-2px) scale(1.04); filter: drop-shadow(0 4px 10px rgba(230,0,35,.28)); }
+@keyframes logo-in { from { opacity: 0; transform: translateY(-8px) scale(.96); } to { opacity: 1; transform: none; } }
+.title { font-size: 24px; font-weight: 400; line-height: 1.3333; margin: 0 0 6px; color: #202124; }
+.subtitle { font-size: 16px; font-weight: 400; line-height: 1.5; margin: 0 0 28px; color: #202124; }
+.step { display: none; }
+.step.active { display: block; }
+.field {
+  border: 1px solid #dadce0; border-radius: 4px; padding: 13px 15px;
+  text-align: left; margin-bottom: 6px; position: relative;
+}
+.field.focus { border-color: #1a73e8; border-width: 2px; padding: 12px 14px; }
+.field input {
+  width: 100%; border: 0; outline: none; font-size: 16px; color: #202124;
+  background: transparent; padding: 0;
+}
+.field label {
+  position: absolute; left: 15px; top: 13px; font-size: 16px; color: #5f6368;
+  pointer-events: none; transition: .15s; background: #fff; padding: 0 4px;
+}
+.field.focus label, .field.has-val label {
+  top: -9px; font-size: 12px; color: #1a73e8;
+}
+.forgot { display: inline-block; margin: 8px 0 26px; font-size: 14px; font-weight: 500; color: #1a73e8; text-decoration: none; }
+.forgot:hover { text-decoration: underline; }
+.row { display: flex; align-items: center; justify-content: space-between; margin-top: 26px; }
+.hint { font-size: 14px; color: #5f6368; text-align: left; max-width: 220px; line-height: 1.4; }
+.hint a { color: #1a73e8; text-decoration: none; font-weight: 500; }
+.hint a:hover { text-decoration: underline; }
+.btn {
+  background: #1a73e8; color: #fff; border: 0; border-radius: 4px;
+  font-size: 14px; font-weight: 500; letter-spacing: .25px;
+  padding: 9px 24px; cursor: pointer; text-transform: none;
+}
+.btn:hover { background: #1b66c9; box-shadow: 0 1px 2px rgba(0,0,0,.2); }
+.btn:active { background: #1b66c9; }
+.create { font-size: 14px; color: #1a73e8; text-decoration: none; font-weight: 500; }
+.create:hover { text-decoration: underline; }
+.divider { border: 0; border-top: 1px solid #ebebeb; margin: 30px 0 0; }
+.foot {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 20px; font-size: 12px; color: #5f6368;
+}
+.foot .left { display: flex; align-items: center; gap: 8px; }
+.foot select {
+  border: 0; background: transparent; color: #5f6368; font-size: 12px; cursor: pointer;
+  outline: none; font-family: inherit; padding: 4px;
+}
+.foot .right { display: flex; gap: 18px; }
+.foot .right a { color: #5f6368; text-decoration: none; }
+.foot .right a:hover { text-decoration: underline; }
+.err { color: #d93025; font-size: 13px; min-height: 18px; margin: 4px 0 8px; text-align: left; }
+</style>
+</head>
+<body>
+<div class="main">
+  <div class="card">
+    <svg class="glogo" viewBox="0 0 250 84" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hyper">
+      <text x="125" y="64" text-anchor="middle" font-family="Arial Black,Helvetica Neue,Arial,sans-serif" font-weight="900" font-size="64" letter-spacing="-3" fill="currentColor">Hyper</text>
+    </svg>
+
+    <h1 class="title" data-i18n="title">使用您的 Hyper 账号登录</h1>
+
+    <!-- Step 1: email -->
+    <div class="step active" id="step-email">
+      <p class="subtitle" data-i18n="sub1">登录以继续使用 Hyper</p>
+      <div class="field" id="f-email">
+        <label data-i18n="emailLabel">电子邮件地址或电话号码</label>
+        <input id="email" type="text" autocomplete="username" spellcheck="false">
+      </div>
+      <div class="err" id="err-email"></div>
+      <a class="forgot" data-i18n="forgotEmail" href="#" id="forgot-email">忘记电子邮件地址？</a>
+      <div class="row">
+        <div class="hint"><a data-i18n="learn" href="#">详细了解</a></div>
+        <button class="btn" type="button" id="next-email" data-i18n="next">下一步</button>
+      </div>
+    </div>
+
+    <!-- Step 2: password -->
+    <div class="step" id="step-pass">
+      <p class="subtitle" id="welcome">您好</p>
+      <div class="field" id="f-pass">
+        <label data-i18n="passLabel">输入您的密码</label>
+        <input id="pass" type="password" autocomplete="current-password">
+      </div>
+      <div class="err" id="err-pass"></div>
+      <a class="forgot" data-i18n="forgotPass" href="#" id="forgot-pass">忘记密码？</a>
+      <div class="row">
+        <a class="create" data-i18n="create" href="#">创建账号</a>
+        <button class="btn" type="button" id="signin" data-i18n="signin">登录</button>
+      </div>
+    </div>
+
+    <hr class="divider">
+  </div>
+</div>
+
+<div class="foot">
+  <div class="left">
+    <select id="lang" aria-label="语言">
+      <option value="zh" data-lang="zh">简体中文</option>
+      <option value="en" data-lang="en">English</option>
+      <option value="ja" data-lang="ja">日本語</option>
+      <option value="de" data-lang="de">Deutsch</option>
+      <option value="fr" data-lang="fr">Français</option>
+    </select>
+  </div>
+  <div class="right">
+    <a data-i18n="help" href="#">帮助</a>
+    <a data-i18n="privacy" href="#">隐私权</a>
+    <a data-i18n="terms" href="#">条款</a>
+  </div>
+</div>
+
+<script>
+'use strict';
+const COOKIE_SESSION = 'hyper_session';
+const COOKIE_LANG = 'hyper.lang';
+
+function setCookie(name, value, days) {
+  try {
+    let s = name + '=' + encodeURIComponent(String(value)) + ';path=/;SameSite=Lax';
+    if (days != null) {
+      const d = new Date(); d.setTime(d.getTime() + days * 864e5);
+      s += ';expires=' + d.toUTCString();
+    }
+    document.cookie = s;
+  } catch (e) {}
+}
+function getCookie(name) {
+  try {
+    const re = new RegExp('(?:^|; )' + name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '=([^;]*)');
+    const m = document.cookie.match(re); return m ? decodeURIComponent(m[1]) : null;
+  } catch (e) { return null; }
+}
+function makeToken() {
+  let s = '';
+  try { const ab = new Uint8Array(24); crypto.getRandomValues(ab); for (const b of ab) s += b.toString(16).padStart(2, '0'); }
+  catch (e) { s = Date.now().toString(16) + Math.random().toString(16).slice(2, 18); }
+  return 'h-' + s + '-' + Date.now().toString(36);
+}
+
+/* ---------- i18n: applied immediately on change ---------- */
+const I18N = {
+  zh: { title:'使用您的 Hyper 账号登录', sub1:'登录以继续使用 Hyper', emailLabel:'电子邮件地址或电话号码',
+        forgotEmail:'忘记电子邮件地址？', learn:'详细了解', next:'下一步', passLabel:'输入您的密码',
+        forgotPass:'忘记密码？', create:'创建账号', signin:'登录', help:'帮助', privacy:'隐私权', terms:'条款' },
+  en: { title:'Sign in with your Hyper Account', sub1:'Sign in to continue to Hyper', emailLabel:'Email or phone',
+        forgotEmail:'Forgot email?', learn:'Learn more', next:'Next', passLabel:'Enter your password',
+        forgotPass:'Forgot password?', create:'Create account', signin:'Sign in', help:'Help', privacy:'Privacy', terms:'Terms' },
+  ja: { title:'Hyper アカウントにログイン', sub1:'Hyper をご利用になるにはログインしてください', emailLabel:'メールアドレスまたは電話番号',
+        forgotEmail:'メールアドレスをお忘れですか？', learn:'詳しく見る', next:'次へ', passLabel:'パスワードを入力',
+        forgotPass:'パスワードをお忘れですか？', create:'アカウントを作成', signin:'ログイン', help:'ヘルプ', privacy:'プライバシー', terms:'規約' },
+  de: { title:'Mit Ihrem Hyper-Konto anmelden', sub1:'Melden Sie sich an, um Hyper zu nutzen', emailLabel:'E-Mail oder Telefonnummer',
+        forgotEmail:'E-Mail vergessen?', learn:'Mehr erfahren', next:'Weiter', passLabel:'Passwort eingeben',
+        forgotPass:'Passwort vergessen?', create:'Konto erstellen', signin:'Anmelden', help:'Hilfe', privacy:'Datenschutz', terms:'AGB' },
+  fr: { title:"Connectez-vous à votre compte Hyper", sub1:"Connectez-vous pour continuer sur Hyper", emailLabel:"Adresse e-mail ou numéro de téléphone",
+        forgotEmail:"E-mail oublié ?", learn:"En savoir plus", next:"Suivant", passLabel:"Saisissez votre mot de passe",
+        forgotPass:"Mot de passe oublié ?", create:"Créer un compte", signin:"Se connecter", help:"Aide", privacy:"Confidentialité", terms:"Conditions" }
+};
+function applyLang(lang) {
+  const d = I18N[lang] || I18N.zh;
+  document.documentElement.lang = lang === 'zh' ? 'zh-CN' : lang;
+  document.querySelectorAll('[data-i18n]').forEach(function (el) {
+    const k = el.getAttribute('data-i18n'); if (d[k] != null) el.textContent = d[k];
+  });
+}
+
+const $ = (s) => document.querySelector(s);
+const initLang = getCookie(COOKIE_LANG) || 'zh';
+$('#lang').value = initLang;
+applyLang(initLang);
+$('#lang').addEventListener('change', function () { setCookie(COOKIE_LANG, this.value, 365); applyLang(this.value); });
+
+/* ---------- material-style floating labels ---------- */
+function bindField(fieldId, inputId) {
+  const f = $(fieldId), i = $(inputId);
+  const toggle = () => {
+    f.classList.toggle('focus', document.activeElement === i);
+    f.classList.toggle('has-val', !!i.value);
+  };
+  i.addEventListener('focus', toggle); i.addEventListener('blur', toggle);
+  i.addEventListener('input', toggle);
+}
+bindField('#f-email', '#email');
+bindField('#f-pass', '#pass');
+
+/* ---------- two-step flow (email -> password) ---------- */
+const emailEl = $('#email'), passEl = $('#pass');
+function goPass() {
+  const v = emailEl.value.trim();
+  if (!v) { $('#err-email').textContent = '请输入您的电子邮件地址或电话号码。'; return; }
+  $('#err-email').textContent = '';
+  $('#welcome').textContent = (I18N[getCookie(COOKIE_LANG) || 'zh'] || I18N.zh).passLabel;
+  $('#welcome').textContent = '您好，' + v;
+  $('#step-email').classList.remove('active');
+  $('#step-pass').classList.add('active');
+  passEl.focus();
+}
+function doSignin() {
+  const v = passEl.value;
+  if (!v) { $('#err-pass').textContent = '请输入您的密码。'; return; }
+  $('#err-pass').textContent = '';
+  const token = makeToken();
+  setCookie(COOKIE_SESSION, token, 7);
+  try { localStorage.setItem('hyper.session', token); localStorage.setItem('hyper.user', JSON.stringify({ user: emailEl.value.trim() })); } catch (e) {}
+  location.href = 'index.html';
+}
+$('#next-email').addEventListener('click', goPass);
+emailEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); goPass(); } });
+$('#signin').addEventListener('click', doSignin);
+passEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); doSignin(); } });
+
+['forgot-email', 'forgot-pass', 'learn', 'create', 'help', 'privacy', 'terms'].forEach(function (id) {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('click', (e) => e.preventDefault());
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,1580 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Hyper — 快速、简洁的 AI 搜索体验，直接给出答案与真实网页结果。">
+<meta name="keywords" content="Hyper,AI搜索,搜索引擎,智能问答">
+<meta property="og:title" content="Hyper">
+<meta property="og:description" content="Hyper — 快速、简洁的 AI 搜索体验，直接给出答案与真实网页结果。">
+<title>Hyper</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2064%2064'%20width%3D'64'%20height%3D'64'%3E%3Crect%20x%3D'6'%20y%3D'6'%20width%3D'52'%20height%3D'52'%20rx%3D'13'%20fill%3D'%23E60023'%2F%3E%3Ctext%20x%3D'32'%20y%3D'46'%20font-family%3D'Arial%20Black%2CArial%2Csans-serif'%20font-weight%3D'900'%20font-size%3D'40'%20text-anchor%3D'middle'%20fill%3D'%23fff'%3EH%3C%2Ftext%3E%3C%2Fsvg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0Ij48cGF0aCBkPSJNMjIuNTYgMTIuMjVjMC0uNzgtLjA3LTEuNTMtLjItMi4yNUgxMnY0LjI2hDUuOTJjLS4yNiAxLjM3LTEuMDQgMi41My0yLjIxIDMuMzF2Mi43N2gzLjU3YzIuMDgtMS45MiAzLjI4LTQuNzQgMy4yOC04LjA5eiIgZmlsbD0iIzQyODVGNCIvPjxwYXRoIGQ9Ik0xMiAyM2MyLjk3IDAgNS40Ni0uOTggNy4yOC0yLjY2bC0zLjU3LTIuNzdjLS45OC42Ni0yLjIzIDEuMDYtMy43MSAxLjA2LTIuODYgMC01LjI5LTEuOTMtNi4xNi00LjUzSDIuMTh2Mi44NEMzLjk5IDIwLjUzIDcuNyAyMyAxMiAyM3oiIGZpbGw9IiMzNEE4NTMiLz48cGF0aCBkPSJNNS44NCAxNC4wOWMtLjIyLS42Ni0uMzUtMS4zNi0uMzUtMi4wOXMtLjEzLTEuNDMuMzUtMi4wOVY3LjA3SDIuMThDMS40MyA4LjU1IDEgMTAuMjIgMSAxMnMuNDMgMy40NSAxLjE4IDQuOTNsMi44NS0yLjIyLjgxLS42MnoiIGZpbGw9IiNGQkJDMDUiLz48cGF0aCBkPSJNMTIgNS4zOGMxLjYyIDAgMy4wNi41NiA0LjIxIDEuNjRsMy4xNS0zLjE1QzE3LjQ1IDIuMDkgMTQuOTcgMSAxMiAxIDcuNyAxIDMuOTkgMy40NyAyLjE4IDcuMDdsMy42NiAyLjg0Yy44Ny0yLjYgMy4zLTQuNTMgNi4xNi00LjUzeiIgZmlsbD0iI0VBNDAzNSIvPjwvc3ZnPg==">
+<link rel="preconnect" href="https://wg.litarcraft.de5.net" crossorigin>
+<link rel="dns-prefetch" href="https://wg.litarcraft.de5.net">
+<style>
+:root{
+  --brand:#E60023;
+  --bg:#fff; --panel:#fff; --fg:#202124; --link:#1a0dab; --visited:#681da8;
+  --url:#006621; --muted:#70757a; --rule:#dadce0; --snippet:#4d5156;
+  --font:Arial,Helvetica,sans-serif; --size:14px;
+}
+body[data-era="1998"]{--bg:#fff;--fg:#000;--link:#0000cc;--url:#008000;--muted:#6f6f6f;--rule:#d9d9d9;--snippet:#000;--size:13px}
+body[data-era="1993"]{--bg:#c0c0c0;--panel:#c0c0c0;--fg:#000;--link:#0000ee;--url:#008000;--muted:#444;--rule:#808080;--snippet:#000;--font:"Times New Roman",Times,serif;--size:15px}
+[hidden]{display:none !important}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;min-height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:var(--size);min-height:100vh;display:flex;flex-direction:column}
+a{color:var(--link);text-decoration:none;cursor:pointer}
+a:visited{color:var(--visited)}
+a:hover{text-decoration:underline}
+button,input,select{font-family:inherit}
+.icon{width:20px;height:20px;fill:currentColor;display:block}
+
+
+/* ---------- official brand artwork (1:1) ---------- */
+.logo-box{display:flex;align-items:center;justify-content:center}
+.glogo{display:none;color:var(--brand)}
+body[data-era="2025"] .glogo{display:block}
+body[data-era="2025"] .logo{display:none}
+.glogo.big{width:272px;height:92px;margin:0 0 26px}
+.glogo.small{width:92px;height:31px}
+.favicon{position:relative;overflow:hidden}
+.fav-img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#fff;border-radius:50%;padding:5px}
+.trail .icon{cursor:pointer;color:#9aa0a6}
+.trail .icon:hover{color:var(--brand)}
+body[data-era="2025"] .trail .icon{color:var(--brand)}
+.ov-spark{color:var(--brand)}
+/* ---------- logo ---------- */
+.logo{font-weight:500;line-height:1;letter-spacing:-5px;white-space:nowrap;user-select:none;font-family:Arial,Helvetica,sans-serif}
+.logo span{color:var(--brand)}
+.logo.big{font-size:92px;margin:0 0 26px}
+.logo.small{font-size:30px;letter-spacing:-2px}
+.logo .sup{display:none}
+body[data-era="1998"] .logo{font-family:Georgia,"Times New Roman",serif;font-weight:700;text-shadow:2px 2px 1px #c7c7c7;letter-spacing:-4px}
+body[data-era="1998"] .logo .sup{display:inline;font:11px Arial,sans-serif;letter-spacing:0;color:#cc0000;vertical-align:top;text-shadow:none;margin-left:5px;position:relative;top:4px}
+body[data-era="1993"] .logo{font-family:"Times New Roman",serif;filter:brightness(0);text-shadow:none;letter-spacing:-2px}
+body[data-era="1993"] .logo.big{font-size:82px}
+body[data-era="1993"] .logo.small{font-size:40px}
+
+/* ---------- 2025 home ---------- */
+#home-nav{position:absolute;top:20px;right:22px;display:flex;align-items:center;gap:18px;font-size:13px;color:#202124}
+#home-nav [data-action]{cursor:pointer}
+#home-nav [data-action]:hover{text-decoration:underline}
+#home-nav .nav-icon{color:#5f6368}
+#home-nav .avatar{width:32px;height:32px;border-radius:50%;background:#1a73e8;color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:500;cursor:pointer}
+#home-nav .avatar:hover{text-decoration:none}
+.view{flex:1 0 auto}
+#home{display:flex;flex-direction:column;align-items:center;padding:172px 16px 60px;text-align:center}
+.tagline{display:none}
+.search-wrap{position:relative;display:flex;align-items:center;width:584px;max-width:88vw;height:46px;background:#fff;border:1px solid #dfe1e5;border-radius:24px;padding:0 14px}
+.search-wrap:hover,.search-wrap:focus-within{box-shadow:0 1px 6px rgba(32,33,36,.28);border-color:rgba(223,225,229,0)}
+.search-wrap .lead{color:#9aa0a6;margin-right:12px;flex-shrink:0}
+.search-wrap .trail{display:flex;align-items:center;gap:14px;color:#5f6368;flex-shrink:0}
+.search-wrap .trail .icon{width:20px;height:20px}
+.sbox{flex:1;min-width:0;border:0;outline:none;background:transparent;font-size:16px;color:#202124;height:100%}
+.btnrow{display:flex;gap:12px;justify-content:center;margin-top:28px}
+.gbtn{background:#f8f9fa;border:1px solid #f8f9fa;border-radius:4px;color:#3c4043;font-size:14px;padding:9px 18px;cursor:pointer}
+.gbtn:hover{border-color:#dadce0;box-shadow:0 1px 1px rgba(0,0,0,.1)}
+.gbtn.sm{font-size:12px;padding:5px 14px}
+.specials{margin-top:28px;font-size:13px;color:#4d5156}
+.specials .lbl{font-weight:600}
+.specials a{margin:0 2px}
+.tips{margin-top:14px;font-size:12px;color:#9aa0a6}
+.mosaic-only{display:none}
+body[data-era="2025"] .specials,body[data-era="2025"] .tips{display:none}
+hr.rule{border:0;border-top:1px solid #bdbdbd;height:0;margin:18px 0}
+
+/* ---------- 1998 / 1993 home ---------- */
+body[data-era="1998"] #home-nav,body[data-era="1993"] #home-nav{display:none}
+body[data-era="1998"] #home,body[data-era="1993"] #home{padding-top:96px}
+body[data-era="1998"] .tagline,body[data-era="1993"] .tagline{display:block;font-size:13px;margin:0 0 9px}
+body[data-era="1998"] .search-wrap,body[data-era="1993"] .search-wrap{width:460px;height:24px;border:1px solid #7b7b7b;border-radius:0;padding:0 4px;box-shadow:none;background:#fff}
+body[data-era="1998"] .search-wrap:hover,body[data-era="1998"] .search-wrap:focus-within,
+body[data-era="1993"] .search-wrap:hover,body[data-era="1993"] .search-wrap:focus-within{box-shadow:none;border-color:#7b7b7b}
+body[data-era="1998"] .search-wrap:focus-within,body[data-era="1993"] .search-wrap:focus-within{border-color:#3366cc}
+.search-wrap .lead,.search-wrap .trail{display:none}
+body[data-era="1998"] #res-head .search-wrap .trail,body[data-era="1993"] #res-head .search-wrap .trail{display:none}
+body[data-era="2025"] .search-wrap .lead{display:block}
+body[data-era="2025"] .search-wrap .trail{display:flex}
+body[data-era="1998"] .sbox,body[data-era="1993"] .sbox{font-size:13px}
+body[data-era="1998"] .btnrow,body[data-era="1993"] .btnrow{margin-top:9px;gap:8px}
+body[data-era="1998"] .gbtn,body[data-era="1993"] .gbtn{background:#dedede;border:1px solid #858585;border-top-color:#fff;border-left-color:#fff;border-radius:0;font-size:12px;padding:3px 10px;min-width:110px}
+body[data-era="1998"] .gbtn:hover,body[data-era="1993"] .gbtn:hover{border-color:#858585;box-shadow:none}
+body[data-era="1993"] .search-wrap{border:2px inset #e8e8e8;height:30px}
+body[data-era="1993"] .sbox{font-family:"Times New Roman",serif;font-size:16px}
+body[data-era="1993"] .gbtn{background:#c0c0c0;border:2px outset #e8e8e8;font-family:"Times New Roman",serif;font-size:15px;padding:2px 12px}
+body[data-era="1993"] .mosaic-only{display:block}
+body[data-era="1993"] hr.rule{border-top:2px groove #e8e8e8;width:82%}
+body[data-era="1993"] .specials,body[data-era="1993"] .tips{font-size:14px;color:#000}
+body[data-era="1998"] .specials,body[data-era="1998"] .tips{font-size:11px}
+
+/* ---------- footer ---------- */
+.footbar{flex-shrink:0;background:#f2f2f2;border-top:1px solid #dadce0;color:#70757a;font-size:13px;padding:0 20px}
+.footbar .frow{padding:14px 12px;display:flex;gap:26px;flex-wrap:wrap}
+.footbar .frow + .frow{border-top:1px solid #dadce0}
+.footbar [data-action]{cursor:pointer}
+.footbar [data-action]:hover{text-decoration:underline;color:#202124}
+body[data-era="1998"] .footbar,body[data-era="1993"] .footbar{display:block;text-align:center;background:#efefef;border-top:1px solid #d5d5d5;padding:11px 12px 13px;font-size:11px;line-height:1.9}
+body[data-era="1998"] .footbar .frow,body[data-era="1993"] .footbar .frow{display:block;padding:0;border:0}
+body[data-era="1998"] .footbar .frow + .frow,body[data-era="1993"] .footbar .frow + .frow{border:0}
+body[data-era="1998"] .footbar a,body[data-era="1993"] .footbar a{text-decoration:underline;margin:0 5px}
+body[data-era="1993"] .footbar{background:#c0c0c0;border-top:2px groove #e8e8e8;font-size:14px;color:#000}
+
+/* ---------- results header ---------- */
+#res-head{display:flex;align-items:center;gap:28px;padding:18px 28px 18px 72px;border-bottom:1px solid #ebebeb;position:sticky;top:0;background:#fff;z-index:5}
+#res-head .logo-cell{flex-shrink:0}
+#res-head .search-wrap{width:660px;max-width:58vw;height:44px;border-radius:24px;border-color:#dfe1e5}
+#res-head .search-wrap .trail{display:flex;color:#4285f4}
+#res-head .search-wrap .lead{display:none}
+#res-head .res-right{margin-left:auto;display:flex;align-items:center;gap:18px;color:#5f6368}
+#res-head .avatar{width:32px;height:32px;border-radius:50%;background:#1a73e8;color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:500}
+#res-head .navlinks,#res-head .res-submit{display:none}
+body[data-era="1998"] #res-head,body[data-era="1993"] #res-head{position:static;align-items:flex-end;gap:20px;padding:13px 18px 11px 60px;border-bottom:1px solid var(--rule)}
+body[data-era="1998"] #res-head .search-wrap,body[data-era="1993"] #res-head .search-wrap{width:320px;max-width:52vw;height:24px;border-radius:0;border:1px solid #7b7b7b}
+body[data-era="1993"] #res-head .search-wrap{border:2px inset #e8e8e8;height:30px}
+body[data-era="1998"] #res-head .res-right,body[data-era="1993"] #res-head .res-right{display:none}
+body[data-era="1998"] #res-head .navlinks,body[data-era="1993"] #res-head .navlinks{display:block;margin-left:auto;font-size:11px;white-space:nowrap;padding-bottom:3px}
+body[data-era="1998"] #res-head .res-submit,body[data-era="1993"] #res-head .res-submit{display:block}
+
+/* ---------- stat / overview / results ---------- */
+.stat{padding:14px 28px 6px;font-size:12px;color:var(--muted);margin-left:140px}
+.stat b{color:var(--fg);font-weight:normal}
+body[data-era="1998"] .stat,body[data-era="1993"] .stat{margin-left:0;padding:11px 18px 9px;font-size:12px}
+body[data-era="1993"] .stat{font-size:15px}
+#results-list{padding:8px 28px 20px 168px;max-width:900px}
+body[data-era="1998"] #results-list,body[data-era="1993"] #results-list{padding:0 18px 18px;max-width:820px}
+
+.overview{margin:8px 28px 26px 168px;max-width:652px;background:linear-gradient(135deg,#f7faff 0%,#f2f7ff 45%,#fdf6ff 100%);border:1px solid #e3ebfb;border-radius:16px;padding:18px 22px 20px}
+.ov-head{display:flex;align-items:center;gap:9px;font-size:15px;font-weight:500;color:#3c4043;margin-bottom:10px}
+.ov-head .icon{width:20px;height:20px;color:#4285f4}
+.ov-body{font-size:14px;line-height:1.7;color:#3c4043}
+.ov-body .a-p{margin:0 0 7px}
+.ov-body .a-gap{height:4px}
+.ov-body .a-li{margin:0 0 3px 16px;text-indent:-11px}
+.ov-body .a-li::before{content:"· ";font-weight:bold}
+.caret{display:inline-block;width:7px;height:14px;background:currentColor;vertical-align:-2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.loading{color:var(--muted)}
+body[data-era="1998"] .overview,body[data-era="1993"] .overview{margin:6px 18px 20px;max-width:680px;background:#f7f7f7;border:1px solid #d9d9d9;border-radius:0;padding:10px 12px}
+body[data-era="1998"] .ov-head,body[data-era="1993"] .ov-head{font-size:13px;font-weight:normal;margin-bottom:6px}
+body[data-era="1998"] .ov-head .icon,body[data-era="1993"] .ov-head .icon{display:none}
+body[data-era="1998"] .ov-body,body[data-era="1993"] .ov-body{font-size:13px;line-height:1.45;color:#000}
+body[data-era="1993"] .overview{background:#c0c0c0;border:2px groove #e8e8e8}
+body[data-era="1993"] .ov-body{font-size:15px}
+
+.hit{margin:0 0 28px;max-width:652px;line-height:1.58}
+.hit-site{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.favicon{width:28px;height:28px;border-radius:50%;border:1px solid #ecedef;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;flex-shrink:0}
+.site-meta{display:flex;flex-direction:column;line-height:1.3;min-width:0}
+.site-name{font-size:14px;color:#202124}
+.site-url{font-size:12px;color:#4d5156;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hit-title{display:block;font-size:20px;line-height:1.3;color:var(--link);margin:0 0 3px;padding-top:4px}
+.hit-snippet{font-size:14px;color:var(--snippet);line-height:1.58}
+.hit-url-classic{display:none}
+body[data-era="1998"] .hit,body[data-era="1993"] .hit{margin-bottom:18px;max-width:680px;line-height:1.45}
+body[data-era="1998"] .hit-site,body[data-era="1993"] .hit-site{display:none}
+body[data-era="1998"] .hit-title,body[data-era="1993"] .hit-title{font-size:15px;padding:0;margin:0;text-decoration:underline}
+body[data-era="1998"] .hit-url-classic,body[data-era="1993"] .hit-url-classic{display:block;font-size:12px;color:var(--url)}
+body[data-era="1998"] .hit-snippet,body[data-era="1993"] .hit-snippet{font-size:13px;color:var(--snippet)}
+body[data-era="1993"] .hit-title{font-size:16px}
+body[data-era="1993"] .hit-snippet{font-size:15px}
+
+.related{padding:6px 28px 34px 168px;max-width:900px}
+.related h3{font-size:18px;font-weight:400;margin:0 0 14px;color:#202124}
+.related-list{display:flex;flex-wrap:wrap;gap:10px;max-width:660px}
+.chip{border:1px solid #dadce0;border-radius:20px;padding:9px 16px;font-size:14px;color:#3c4043;background:#fff}
+.chip:hover{background:#f8f9fa;text-decoration:none}
+body[data-era="1998"] .related,body[data-era="1993"] .related{padding:12px 18px 24px;max-width:820px;border-top:1px solid var(--rule)}
+body[data-era="1998"] .related h3,body[data-era="1993"] .related h3{font-size:14px;font-weight:normal;margin-bottom:8px}
+body[data-era="1998"] .related-list,body[data-era="1993"] .related-list{display:grid;grid-template-columns:1fr 1fr;gap:2px 34px}
+body[data-era="1998"] .chip,body[data-era="1993"] .chip{border:0;border-radius:0;background:none;padding:2px 0;color:var(--link);text-decoration:underline;font-size:13px}
+body[data-era="1998"] .chip:hover,body[data-era="1993"] .chip:hover{background:none}
+body[data-era="1993"] .related h3,body[data-era="1993"] .chip{font-size:15px}
+#res-bottom{padding:0 28px 30px 168px;font-size:12px;color:var(--muted);max-width:900px}
+body[data-era="1998"] #res-bottom,body[data-era="1993"] #res-bottom{padding:4px 18px 22px}
+.errorbox{border:1px solid #d93025;background:#fff7f7;padding:14px 16px;border-radius:8px;font-size:13px;line-height:1.6;max-width:652px}
+.errorbox .eh{font-weight:600;color:#d93025;margin-bottom:6px}
+.errorbox .detail{color:#5f6368;word-break:break-word;font-size:12px;margin:6px 0 10px}
+body[data-era="1998"] .errorbox,body[data-era="1993"] .errorbox{border-radius:0}
+
+/* ---------- modal ---------- */
+#modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:60;display:flex;align-items:center;justify-content:center;padding:16px}
+#modal{background:#fff;width:min(560px,94vw);border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.24);max-height:90vh;display:flex;flex-direction:column}
+.modal-bar{padding:16px 22px 10px;font-size:18px;font-weight:500;color:#202124}
+.modal-body{padding:6px 22px 12px;font-size:13px;line-height:1.65;color:#3c4043;overflow:auto}
+.modal-body p{margin:0 0 10px}
+.modal-body label{display:block;margin:11px 0}
+.modal-body .lbl{display:block;font-size:12px;color:#5f6368;margin-bottom:4px}
+.modal-body input[type=text],.modal-body input[type=number],.modal-body input[type=password],.modal-body select{width:100%;border:1px solid #dadce0;border-radius:6px;padding:8px 10px;font-size:14px;color:#202124;background:#fff}
+.modal-body input[type=number]{width:90px}
+.modal-body code{background:#f1f3f4;padding:1px 5px;border-radius:3px;font-family:Consolas,"Courier New",monospace;font-size:12px}
+.modal-body .k{font-weight:600;color:#202124}
+.modal-body .btnrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:2px}
+.modal-body p.err{color:#c5221f;margin:8px 0 0}
+.modal-body p.note{color:#5f6368;margin:8px 0 0}
+.modal-body details{margin-top:14px;border-top:1px solid #ebebeb;padding-top:12px}
+.modal-body summary{cursor:pointer;color:#1a73e8;font-size:13px}
+.modal-body pre{background:#f8f9fa;border:1px solid #ebebeb;border-radius:6px;padding:10px;overflow:auto;font-size:11px;line-height:1.45;max-height:220px;color:#3c4043;white-space:pre-wrap;word-break:break-all}
+.modal-foot{padding:12px 22px 20px;display:flex;gap:9px;flex-wrap:wrap}
+.modal-foot .gbtn{border-color:#dadce0;background:#fff}
+.modal-foot .primary{background:#1a73e8;color:#fff;border-color:#1a73e8}
+body[data-era="1998"] #modal,body[data-era="1993"] #modal{border:2px outset #cfcfcf;border-radius:0;box-shadow:4px 4px 0 rgba(0,0,0,.22)}
+body[data-era="1998"] .modal-bar,body[data-era="1993"] .modal-bar{background:#000080;color:#fff;font:bold 12px Arial,sans-serif;padding:5px 9px}
+body[data-era="1998"] .modal-body,body[data-era="1993"] .modal-body{font-size:13px}
+body[data-era="1993"] #modal{background:#c0c0c0}
+
+@media (max-width:760px){
+  .logo.big{font-size:62px}
+  #res-head{flex-wrap:wrap;gap:12px;padding:12px 16px}
+  #res-head .search-wrap{width:100%;max-width:100%;order:3}
+  .stat,.overview,#results-list,.related,#res-bottom{margin-left:0;padding-left:16px;padding-right:16px}
+  .overview{margin-left:16px;margin-right:16px}
+  #home-nav{display:none}
+  #topbar{position:static;justify-content:center;padding:8px}
+  #home{padding-top:70px}
+  .tl-btn{top:10px;left:10px;width:38px;height:38px}
+  .tl-btn .icon{width:20px;height:20px}
+}
+
+/* ---------- top-left settings button ---------- */
+.tl-btn{position:fixed;top:14px;left:16px;z-index:55;width:44px;height:44px;border-radius:50%;
+  background:#fff;border:1px solid #dadce0;box-shadow:0 1px 5px rgba(0,0,0,.2);
+  display:flex;align-items:center;justify-content:center;color:#5f6368;cursor:pointer}
+.tl-btn:hover{background:#f8f9fa;color:var(--brand);box-shadow:0 1px 8px rgba(230,0,35,.25)}
+.tl-btn .icon{width:22px;height:22px}
+.tl-btn.listening{animation:pulse 1s ease-in-out infinite}
+
+/* ---------- actionable controls ---------- */
+[data-action]{cursor:pointer}
+[data-action]:focus-visible{outline:2px solid #1a73e8;outline-offset:2px;border-radius:3px}
+.search-wrap [data-action]:hover{opacity:.72}
+.picon.listening{animation:pulse 1s ease-in-out infinite;border-radius:50%}
+@keyframes pulse{50%{box-shadow:0 0 0 6px rgba(66,133,244,.25)}}
+body[data-era="1998"] .footbar [data-action],body[data-era="1993"] .footbar [data-action]{text-decoration:underline}
+#toast{position:fixed;left:50%;bottom:32px;transform:translate(-50%,16px);background:#202124;color:#fff;
+  font:13px Arial,Helvetica,sans-serif;padding:11px 18px;border-radius:6px;box-shadow:0 3px 14px rgba(0,0,0,.28);
+  opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:40;max-width:80vw;text-align:center}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+.panel-p{margin:0 0 12px;line-height:1.6}
+.panel-ext{margin-top:16px;font-size:13px}
+.panel-ext a{color:#1a73e8;text-decoration:underline}
+.app-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:6px}
+.app-grid button,.panel-row button{font:inherit;background:#f8f9fa;border:1px solid #dadce0;border-radius:8px;
+  padding:12px 8px;cursor:pointer;color:#3c4043}
+.app-grid button:hover,.panel-row button:hover{background:#eef3fe;border-color:#c6dafc}
+.panel-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:14px 0}
+.panel-row label{display:flex;align-items:center;gap:8px;font-size:13px}
+.lens-preview{margin-top:12px;min-height:60px;display:flex;align-items:center;gap:12px}
+.lens-preview img{max-width:120px;max-height:120px;border:1px solid #dadce0;border-radius:8px}
+
+/* ---------- custom animated dropdown ---------- */
+.dd{position:relative;width:100%}
+.dd-host{display:block;width:100%;margin-top:4px}
+.dd-trigger{display:flex;align-items:center;justify-content:space-between;width:100%;border:1px solid #dadce0;border-radius:6px;
+  padding:9px 12px;font-size:14px;background:#fff;color:#202124;cursor:pointer;text-align:left;line-height:1.2}
+.dd-trigger:focus-visible{outline:2px solid #1a73e8;outline-offset:2px}
+.dd-trigger:hover{border-color:#bdc1c6}
+.dd-arrow{width:20px;height:20px;flex-shrink:0;color:#5f6368;transition:transform .28s cubic-bezier(.4,0,.2,1)}
+.dd.open .dd-arrow{transform:rotate(180deg)}
+.dd-menu{position:absolute;top:calc(100% + 6px);left:0;right:0;background:#fff;border:1px solid #ebebeb;border-radius:12px;
+  box-shadow:0 10px 30px rgba(32,33,36,.18);padding:6px;z-index:30;overflow:hidden;
+  opacity:0;transform:translateY(-12px) scale(.97);transform-origin:top center;pointer-events:none;
+  transition:opacity .22s ease,transform .26s cubic-bezier(.2,.85,.25,1)}
+.dd.open .dd-menu{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
+.dd-item{padding:10px 12px;border-radius:8px;font-size:14px;color:#3c4043;cursor:pointer;
+  opacity:0;transform:translateY(-8px);
+  transition:opacity .2s ease,transform .22s cubic-bezier(.2,.85,.25,1),background .12s ease,color .12s ease}
+.dd.open .dd-item{opacity:1;transform:translateY(0)}
+.dd-item:hover{background:#f1f3f4}
+.dd-item.selected{color:#1a73e8;background:#eef3fe;font-weight:500}
+.dd-item.selected::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:#1a73e8;margin-right:9px;vertical-align:middle}
+body[data-era="1998"] .dd-menu,body[data-era="1993"] .dd-menu{border-radius:0;border:2px outset #cfcfcf}
+body[data-era="1998"] .dd-trigger,body[data-era="1993"] .dd-trigger{border-radius:0;border:1px solid #7b7b7b}
+
+/* ---------- custom background ---------- */
+.bg-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.bg-chip{width:34px;height:34px;border-radius:8px;cursor:pointer;border:2px solid transparent;background-size:cover;background-position:center}
+.bg-chip:hover{border-color:#c6dafc}
+.bg-chip.sel{border-color:#1a73e8;box-shadow:0 0 0 2px rgba(26,115,232,.25)}
+.bg-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.bg-row input[type=text]{flex:1;min-width:160px;border:1px solid #dadce0;border-radius:6px;padding:8px 10px;font-size:13px}
+.bg-row input[type=color]{width:40px;height:38px;border:1px solid #dadce0;border-radius:6px;padding:2px;background:#fff;cursor:pointer}
+.bg-preview{margin-top:10px;height:54px;border-radius:8px;border:1px solid #dadce0;background-size:cover;background-position:center}
+.modal-body .field-sep{margin:14px 0;border:0;border-top:1px solid #ebebeb}
+.modal-body .field-title{font-size:12px;font-weight:600;color:#5f6368;margin:14px 0 2px}
+
+/* ---------- login gate notice ---------- */
+.locked-note{font-size:12px;color:#9aa0a6;margin-top:6px}
+</style>
+</head>
+<body data-era="2025">
+
+<svg style="display:none" aria-hidden="true">
+  <symbol id="hx-wordmark" viewBox="0 0 250 84"><text x="125" y="64" text-anchor="middle" font-family="Arial Black,Helvetica Neue,Arial,sans-serif" font-weight="900" font-size="64" letter-spacing="-3" fill="currentColor">Hyper</text></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 4.99L20.49 19zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24"><path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-3.08A7 7 0 0 0 19 11z"/></symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24"><path d="M12 8a4 4 0 1 0 4 4 4 4 0 0 0-4-4zm8 10H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h2.6l1.2-2h8.4l1.2 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2zM12 9.5A2.5 2.5 0 1 1 9.5 12 2.5 2.5 0 0 1 12 9.5z"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24"><path d="M6 8a2 2 0 1 0-2-2 2 2 0 0 0 2 2zm6 0a2 2 0 1 0-2-2 2 2 0 0 0 2 2zm6 0a2 2 0 1 0-2-2 2 2 0 0 0 2 2zM6 14a2 2 0 1 0-2-2 2 2 0 0 0 2 2zm6 0a2 2 0 1 0-2-2 2 2 0 0 0 2 2zm6 0a2 2 0 1 0-2-2 2 2 0 0 0 2 2zM6 20a2 2 0 1 0-2-2 2 2 0 0 0 2 2zm6 0a2 2 0 1 0-2-2 2 2 0 0 0 2 2zm6 0a2 2 0 1 0-2-2 2 2 0 0 0 2 2z"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 2l1.9 6.1L20 10l-6.1 1.9L12 18l-1.9-6.1L4 10l6.1-1.9zM19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><path d="M19.14 12.94a7.49 7.49 0 0 0 .05-.94 7.49 7.49 0 0 0-.05-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.3 7.3 0 0 0-1.62-.94l-.36-2.54a.5.5 0 0 0-.5-.42h-3.84a.5.5 0 0 0-.5.42l-.36 2.54c-.59.24-1.13.56-1.62.94l-2.39-.96a.5.5 0 0 0-.6.22L2.74 8.84a.5.5 0 0 0 .12.64l2.03 1.58c-.03.31-.05.62-.05.94 0 .32.02.63.05.94l-2.03 1.58a.5.5 0 0 0-.12.64l1.92 3.32c.13.22.39.31.6.22l2.39-.96c.49.38 1.03.7 1.62.94l.36 2.54c.05.24.25.42.5.42h3.84c.25 0 .45-.18.5-.42l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.21.09.47 0 .6-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58zM12 15.5A3.5 3.5 0 1 1 12 8.5a3.5 3.5 0 0 1 0 7z"/></symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></symbol>
+  <symbol id="i-image" viewBox="0 0 24 24"><path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2zM8.5 13.5l2.5 3 3.5-4.5 4.5 6H5z"/></symbol>
+</svg>
+
+<!-- ==================== TOP-LEFT SETTINGS BUTTON ==================== -->
+<button id="tl-settings" class="tl-btn" data-action="settings" title="设置 / 配置 API（模型 · 调用地址 · 密钥）" aria-label="设置">
+  <svg class="icon"><use href="#i-gear"/></svg>
+</button>
+
+<!-- ==================== HOME ==================== -->
+<div id="home" class="view">
+  <nav id="home-nav">
+    <span data-action="info" data-topic="about">关于</span><span data-action="info" data-topic="store">商店</span><span data-action="info" data-topic="support">支持</span><span data-action="scope" data-scope="images">图片</span>
+    <svg class="icon nav-icon" data-action="apps"><use href="#i-grid"/></svg>
+    <span class="avatar" data-action="account" title="账户">H</span>
+  </nav>
+
+  <div class="logo-box big">
+    <svg class="glogo big" viewBox="0 0 250 84" role="img" aria-label="Hyper"><use href="#hx-wordmark"/></svg>
+    <div class="logo big" aria-label="Hyper">
+      <span class="c1">H</span><span class="c2">y</span><span class="c3">p</span><span class="c4">e</span><span class="c5">r</span><span class="sup">Beta</span>
+    </div>
+  </div>
+  <hr class="rule mosaic-only">
+  <div class="mosaic-only" style="font-size:15px;margin-bottom:16px">Welcome to the World Wide Web</div>
+
+  <form id="home-form" autocomplete="off">
+    <div class="tagline">使用 Hyper 搜索网络！</div>
+    <div class="search-wrap">
+      <svg class="icon lead" data-action="focus"><use href="#i-search"/></svg>
+      <input class="sbox" id="home-input" type="text" maxlength="500" aria-label="搜索" placeholder="搜索，或向 AI 提问">
+      <div class="trail">
+        <svg class="icon" data-action="voice" aria-label="语音搜索"><use href="#i-mic"/></svg>
+        <svg class="icon" data-action="lens" aria-label="图片搜索"><use href="#i-camera"/></svg>
+        <svg class="icon" data-action="submit" aria-label="搜索"><use href="#i-search"/></svg>
+      </div>
+    </div>
+    <div class="btnrow">
+      <button class="gbtn" type="submit">Hyper 搜索</button>
+    </div>
+  </form>
+
+  <div class="specials">
+    <span class="lbl">特别搜索：</span>
+    <a data-q="1993 年的万维网是什么样子的？">1993 万维网</a> -
+    <a data-q="早期的搜索引擎是如何对网页排名的？">早期搜索引擎</a> -
+    <a data-q="解释一次 HTTP 请求是如何工作的">HTTP 如何工作</a>
+  </div>
+  <div class="tips">按 <b>/</b> 跳到搜索框 · 点左上角齿轮可配置 API</div>
+</div>
+
+<div id="footer-home" class="footbar">
+  <div class="frow"><span class="region-label" data-action="region">中国</span></div>
+  <div class="frow"><span data-action="info" data-topic="about">关于</span><span data-action="info" data-topic="advertising">广告</span><span data-action="info" data-topic="business">商务</span><span data-action="info" data-topic="how">搜索如何运作</span><span data-action="info" data-topic="privacy">隐私</span><span data-action="info" data-topic="terms">条款</span><span id="f-home-settings" data-action="settings">设置</span></div>
+</div>
+
+<!-- ==================== RESULTS ==================== -->
+<div id="results" class="view" hidden>
+  <header id="res-head">
+    <div class="logo-cell"><div class="logo-box small">
+      <svg class="glogo small" viewBox="0 0 250 84" role="img" aria-label="Hyper"><use href="#hx-wordmark"/></svg>
+      <div class="logo small" aria-label="Hyper">
+        <span class="c1">H</span><span class="c2">y</span><span class="c3">p</span><span class="c4">e</span><span class="c5">r</span><span class="sup">Beta</span>
+      </div>
+    </div></div>
+    <form id="res-form" class="search-wrap" autocomplete="off" style="border:0;box-shadow:none;background:transparent;padding:0;display:block">
+      <div class="search-wrap" style="width:100%;max-width:100%">
+        <input class="sbox" id="res-input" type="text" maxlength="500" aria-label="搜索">
+        <div class="trail">
+          <svg class="icon" data-action="voice" aria-label="语音搜索"><use href="#i-mic"/></svg>
+          <svg class="icon" data-action="lens" aria-label="图片搜索"><use href="#i-camera"/></svg>
+          <svg class="icon" data-action="submit" aria-label="搜索"><use href="#i-search"/></svg>
+        </div>
+      </div>
+    </form>
+    <button class="gbtn sm res-submit" type="submit" form="res-form">搜索</button>
+    <div class="navlinks"><a id="res-prefs">偏好</a> - <a id="res-settings">设置</a> - <a id="res-help">帮助</a></div>
+    <div class="res-right"><svg class="icon" data-action="apps"><use href="#i-grid"/></svg><span class="avatar" data-action="account">H</span></div>
+  </header>
+
+  <div class="stat" id="stat">正在检索索引……</div>
+
+  <section class="overview" id="overview">
+    <div class="ov-head"><svg class="icon ov-spark" aria-hidden="true"><use href="#i-spark"/></svg><span id="ov-title">Hyper AI</span></div>
+    <div class="ov-body" id="overview-body" aria-live="polite"></div>
+  </section>
+
+  <div id="results-list"></div>
+
+  <section class="related" id="related" hidden>
+    <h3>相关搜索</h3>
+    <div class="related-list" id="related-list"></div>
+  </section>
+
+  <div id="res-bottom"><hr class="rule"><div>如果以上结果不合需求，请在上方尝试更具体的查询。</div></div>
+</div>
+
+<div id="footer-results" class="footbar" hidden>
+  <div class="frow"><span class="region-label" data-action="region">中国</span><span id="f-res-home" data-action="home">Hyper 首页</span></div>
+  <div class="frow"><span data-action="info" data-topic="about">关于</span><span data-action="info" data-topic="advertising">广告</span><span data-action="info" data-topic="business">商务</span><span data-action="info" data-topic="how">搜索如何运作</span><span data-action="info" data-topic="privacy">隐私</span><span data-action="info" data-topic="terms">条款</span><span id="f-res-settings" data-action="settings">设置</span></div>
+</div>
+
+<!-- ==================== MODAL ==================== -->
+<div id="modal-backdrop" hidden>
+  <div id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-bar" id="modal-title">搜索设置</div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-foot" id="modal-foot"></div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+const $ = (s, r) => (r || document).querySelector(s);
+const $$ = (s, r) => Array.prototype.slice.call((r || document).querySelectorAll(s));
+const CFG_KEY = 'gsearch.settings.v4';
+const COOKIE_SETTINGS = 'hyper.settings';
+const COOKIE_BG = 'hyper.bg';
+const COOKIE_SESSION = 'hyper_session';
+const COOKIE_ACCOUNT = 'hyper.account';
+const COOKIE_REGION = 'hyper.region';
+
+/* ---------------- cookies (every change persists a real value here) ---------------- */
+function setCookie(name, value, days) {
+  try {
+    let s = name + '=' + encodeURIComponent(String(value)) + ';path=/;SameSite=Lax';
+    if (days != null) {
+      const d = new Date();
+      d.setTime(d.getTime() + days * 864e5);
+      s += ';expires=' + d.toUTCString();
+    }
+    document.cookie = s;
+  } catch (e) { /* cookies may be blocked (e.g. some file:// contexts) */ }
+}
+function getCookie(name) {
+  try {
+    const re = new RegExp('(?:^|; )' + name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '=([^;]*)');
+    const m = document.cookie.match(re);
+    return m ? decodeURIComponent(m[1]) : null;
+  } catch (e) { return null; }
+}
+function deleteCookie(name) {
+  try { document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/'; } catch (e) {}
+}
+/* Login session cookie links the login page to this search page (real token value). */
+function makeSessionToken() {
+  let s = '';
+  try {
+    const ab = new Uint8Array(24); crypto.getRandomValues(ab);
+    for (const b of ab) s += b.toString(16).padStart(2, '0');
+  } catch (e) {
+    s = Date.now().toString(16) + Math.random().toString(16).slice(2, 18);
+  }
+  return 'h-' + s + '-' + Date.now().toString(36);
+}
+
+/* Default API key pre-filled so requests always carry auth. Zhipu's API blocks
+   the browser CORS preflight, so callAPI falls back through CORS proxies. */
+const DEFAULT_API_KEY = '842b6987eac84ccab56eb952a9cb6b3c.GMFznHG6Z8NQdstI';
+const GATEWAY_ENDPOINT = 'https://wg.litarcraft.de5.net/api/chat';
+const LEGACY_ENDPOINT = 'https://open.bigmodel.cn/api/paas/v4/chat/completions';
+
+const defaults = {
+  era: '2025', resultCount: 8, overview: 'short', summaryOn: false,
+  endpoint: GATEWAY_ENDPOINT,
+  model: 'glm-4-flash',
+  apiKey: DEFAULT_API_KEY,
+  corsProxy: '',
+  seoTitle: 'Hyper',
+  seoDescription: 'Hyper — 快速、简洁的 AI 搜索体验，直接给出答案与真实网页结果。',
+  seoKeywords: 'Hyper,AI搜索,搜索引擎,智能问答'
+};
+let settings = Object.assign({}, defaults);
+(function loadSettings() {
+  let saved = null;
+  const ck = getCookie(COOKIE_SETTINGS);
+  if (ck) { try { saved = JSON.parse(ck); } catch (e) { saved = null; } }
+  if (!saved) { try { saved = JSON.parse(localStorage.getItem(CFG_KEY) || '{}'); } catch (e) { saved = null; } }
+  if (saved && typeof saved === 'object') settings = Object.assign({}, defaults, saved);
+  if (!settings.endpoint || settings.endpoint === LEGACY_ENDPOINT) settings.endpoint = GATEWAY_ENDPOINT;
+  if (!settings.apiKey) settings.apiKey = DEFAULT_API_KEY;
+})();
+
+const state = { query: '', controller: null, runId: 0, startedAt: 0, results: [], related: [], lastSeconds: null };
+
+/* ---------------- helpers ---------------- */
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, (c) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  })[c]);
+}
+function formatText(src) {
+  return String(src).replace(/\r/g, '').split('\n').map((line) => {
+    const t = line.replace(/\s+$/, '');
+    if (!t) return '<div class="a-gap"></div>';
+    const bullet = /^(\s*)(?:[-*•]|\d+[.)])\s+/.exec(t);
+    const body = bullet ? t.slice(bullet[0].length) : t;
+    return bullet ? '<div class="a-li">' + esc(body) + '</div>' : '<div class="a-p">' + esc(body) + '</div>';
+  }).join('');
+}
+function persist() {
+  const json = JSON.stringify(settings);
+  setCookie(COOKIE_SETTINGS, json, 365);
+  try { localStorage.setItem(CFG_KEY, json); } catch (e) { /* noop */ }
+}
+
+/* ---------------- SEO (title / description / keywords, stored in cookie) ---------------- */
+function metaEl(attr, name) {
+  let el = document.head.querySelector('meta[' + attr + '="' + name + '"]');
+  if (!el) { el = document.createElement('meta'); el.setAttribute(attr, name); document.head.appendChild(el); }
+  return el;
+}
+function applySEO() {
+  const title = (settings.seoTitle || 'Hyper').trim() || 'Hyper';
+  const desc = (settings.seoDescription || '').trim();
+  const kw = (settings.seoKeywords || '').trim();
+  metaEl('name', 'description').content = desc;
+  metaEl('name', 'keywords').content = kw;
+  metaEl('property', 'og:title').content = title;
+  metaEl('property', 'og:description').content = desc;
+  if ($('#results') && $('#results').hidden) document.title = title;
+}
+
+/* ---------------- background (real value stored in cookie hyper.bg) ---------------- */
+/* Miuix-style dynamic color: the brand/logo color is derived from the background.
+   For a solid color it uses the inverted hue; on images it stays legible via a veil. */
+function hexToRgb(hex) {
+  let h = String(hex || '').trim().replace('#', '');
+  if (h.length === 3) h = h.split('').map((c) => c + c).join('');
+  if (!/^[0-9a-fA-F]{6}$/.test(h)) return null;
+  const n = parseInt(h, 16);
+  return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
+}
+function rgbToHex(r, g, b) {
+  return '#' + [r, g, b].map((v) => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, '0')).join('');
+}
+function themeColorFor(bg) {
+  if (!bg) return '#E60023';
+  if (bg.indexOf('color:') === 0) {
+    const c = hexToRgb(bg.slice(6));
+    if (c) {
+      /* invert, then lift toward a vivid, readable tone (Miuix-like dynamic color) */
+      const inv = { r: 255 - c.r, g: 255 - c.g, b: 255 - c.b };
+      const mx = Math.max(inv.r, inv.g, inv.b), mn = Math.min(inv.r, inv.g, inv.b);
+      if (mx === mn) return rgbToHex(Math.max(60, inv.r), Math.max(60, inv.g), Math.max(60, inv.b));
+      const boost = 1 + (255 - mx) / 400;
+      return rgbToHex(inv.r * boost, inv.g * boost, inv.b * boost);
+    }
+  }
+  if (bg.indexOf('image:') === 0) return '#E60023';
+  const any = hexToRgb(bg);
+  if (any) return rgbToHex(255 - any.r, 255 - any.g, 255 - any.b);
+  return '#E60023';
+}
+function applyBackground(bg) {
+  const body = document.body;
+  document.documentElement.style.setProperty('--brand', themeColorFor(bg));
+  body.classList.toggle('has-bg', !!bg);
+  if (!bg) { body.style.backgroundImage = ''; body.style.backgroundColor = ''; return; }
+  if (bg.indexOf('image:') === 0) {
+    const url = bg.slice(6);
+    body.style.backgroundImage = 'linear-gradient(rgba(255,255,255,.56),rgba(255,255,255,.56)),url("' + url + '")';
+    body.style.backgroundSize = 'cover';
+    body.style.backgroundPosition = 'center';
+    body.style.backgroundAttachment = 'fixed';
+    body.style.backgroundColor = '';
+  } else if (bg.indexOf('color:') === 0) {
+    body.style.backgroundImage = 'none';
+    body.style.backgroundColor = bg.slice(6);
+    body.style.backgroundSize = ''; body.style.backgroundPosition = ''; body.style.backgroundAttachment = '';
+  } else {
+    body.style.backgroundImage = 'none';
+    body.style.backgroundColor = bg;
+  }
+}
+function loadBackground() {
+  const bg = getCookie(COOKIE_BG);
+  applyBackground(bg || '');
+  return bg || '';
+}
+function setBackground(bg) { setCookie(COOKIE_BG, bg || '', 365); applyBackground(bg || ''); }
+
+/* ---- instant result cache: repeat queries render locally in <0.1s, no network ---- */
+const CACHE_KEY = 'hyper.search.cache.v1';
+const CACHE_TTL = 864e5; /* 24h */
+function cacheRead(q) {
+  try {
+    const all = JSON.parse(localStorage.getItem(CACHE_KEY) || '{}');
+    const hit = all[q];
+    if (hit && hit.ts && (Date.now() - hit.ts) < CACHE_TTL && hit.results) return hit;
+  } catch (e) { /* noop */ }
+  return null;
+}
+function cacheWrite(q, results, related, overview) {
+  try {
+    const all = JSON.parse(localStorage.getItem(CACHE_KEY) || '{}');
+    all[q] = { results: results, related: related, overview: overview, ts: Date.now() };
+    const keys = Object.keys(all);
+    if (keys.length > 100) {
+      keys.sort((a, b) => (all[a].ts || 0) - (all[b].ts || 0)).slice(0, keys.length - 100)
+        .forEach((k) => { delete all[k]; });
+    }
+    localStorage.setItem(CACHE_KEY, JSON.stringify(all));
+  } catch (e) { /* noop */ }
+}
+function readHashQuery() {
+  const h = location.hash || '';
+  if (h.indexOf('#q=') !== 0) return '';
+  try { return decodeURIComponent(h.slice(3)); } catch (e) { return ''; }
+}
+function visibleInput() { return $('#results').hidden ? $('#home-input') : $('#res-input'); }
+function submitQuery(raw) {
+  const q = String(raw || '').trim().slice(0, 500);
+  if (!q) { const b = visibleInput(); if (b) b.focus(); return; }
+  const target = '#q=' + encodeURIComponent(q);
+  if (location.hash === target) runSearch(q);
+  else location.hash = target;
+}
+function setEra(era) {
+  settings.era = ['2025', '1998', '1993'].indexOf(era) === -1 ? '2025' : era;
+  persist();
+  document.body.setAttribute('data-era', settings.era);
+  $('#ov-title').textContent = settings.era === '2025' ? 'Hyper AI' : '搜索摘要';
+  if (state.query && !$('#results').hidden && state.lastSeconds) renderStat(state.results.length, state.lastSeconds);
+}
+/* The AI summary is opt-in: off by default, toggled in settings. */
+function applySummary() {
+  const on = settings.summaryOn === true;
+  const ov = $('#overview');
+  if (ov) ov.hidden = !on;
+}
+
+/* ---------------- views ---------------- */
+function showHome() {
+  $('#home').hidden = false; $('#footer-home').hidden = false;
+  $('#results').hidden = true; $('#footer-results').hidden = true;
+  document.title = (settings.seoTitle || 'Hyper').trim() || 'Hyper';
+  $('#home-input').value = state.query || '';
+}
+function showResults(q) {
+  $('#home').hidden = true; $('#footer-home').hidden = true;
+  $('#results').hidden = false; $('#footer-results').hidden = false;
+  document.title = q + ' - ' + ((settings.seoTitle || 'Hyper').trim() || 'Hyper');
+  $('#res-input').value = q; $('#home-input').value = q;
+  window.scrollTo(0, 0);
+}
+
+/* ---------------- API endpoint resolution ---------------- */
+/* Candidates tried in order: user proxy (if any) -> direct GLM -> public proxies.
+   Public proxies often strip the Authorization header, so they are a last resort. */
+const FALLBACK_PROXIES = [
+  'https://api.codetabs.com/v1/proxy/?quest=%s',
+  'https://thingproxy.freeboard.io/fetch/%s',
+  'https://api.allorigins.win/raw?url=%s'
+];
+function baseEndpoint() {
+  return (settings.endpoint || GATEWAY_ENDPOINT).trim();
+}
+/* A gateway injects the key server-side and only allows the Content-Type header.
+   Sending Content-Type:text/plain with no Authorization header makes this a CORS
+   "simple request" — the browser skips the preflight entirely. */
+function isGateway() {
+  return /\/api\/chat\/?$/.test(baseEndpoint());
+}
+function buildCandidates() {
+  const base = baseEndpoint();
+  const enc = encodeURIComponent(base);
+  const out = [];
+  const cp = (settings.corsProxy || '').trim();
+  if (cp) out.push(cp.replace('%s', enc));
+  out.push(base);
+  FALLBACK_PROXIES.forEach((t) => out.push(t.replace('%s', enc)));
+  return out;
+}
+
+/* ---------------- API ---------------- */
+async function callAPI(body, signal) {
+  const candidates = buildCandidates();
+  let lastErr = null;
+  for (let i = 0; i < candidates.length; i++) {
+    const url = candidates[i];
+    try {
+      const gateway = isGateway() && url.indexOf(baseEndpoint()) === 0;
+      const headers = { 'Content-Type': gateway ? 'text/plain' : 'application/json' };
+      if (settings.apiKey && !gateway) headers['Authorization'] = 'Bearer ' + settings.apiKey;
+      const res = await fetch(url, {
+        method: 'POST', headers: headers,
+        body: JSON.stringify(body), signal: signal
+      });
+      if (res.ok) return res;
+      let detail = 'HTTP ' + res.status;
+      try { const j = await res.json(); if (j && j.error && j.error.message) detail = j.error.message; } catch (e) { /* noop */ }
+      lastErr = new Error(detail);
+      /* a gateway 404 / 405 means "no server deployed here" -> try a proxy next */
+    } catch (e) {
+      lastErr = e;
+    }
+  }
+  throw enhanceError(lastErr);
+}
+function enhanceError(e) {
+  if (!e) return new Error('未知错误');
+  const msg = e.message || String(e);
+  if (/Failed to fetch|NetworkError|load failed|TypeError|AbortError/i.test(msg)) {
+    return new Error('无法连接 AI 接口（' + msg + '）。' +
+      '默认已接入可用的网关，若仍失败：请在左上角设置里填写一个支持转发鉴权头的 CORS 代理（占位符用 %s），' +
+      '或改用你自己的兼容接口调用地址。');
+  }
+  return e;
+}
+
+function overviewSystem() {
+  const length = settings.overview === 'detailed' ? '约 220 字' : '110 字以内';
+  return '你撰写展示在网页搜索结果上方的简短概览。直接、准确地用纯文本回答查询。' +
+    '使用与查询相同的语言。先用一句直接的句子开头，再给出简短的事实性句子或紧凑的要点列表。' +
+    '仅限纯文本：不要 markdown 标题、不要表格、不要 emoji、不要 URL。长度控制在 ' + length + '。' +
+    '绝不编造日期、数字或引用。';
+}
+const RESULTS_SYSTEM =
+  '你是一个网页搜索索引。只输出一个原始 JSON 数组，不要任何其它内容——不要 markdown、' +
+  '不要代码块、不要散文、不要外层包裹对象。数组包含 8 个扁平对象，每个对象独占一行，' +
+  '键的顺序严格为：{"title":"...","url":"...","snippet":"..."}。' +
+  '硬性规则：(1) 每个 url 必须是真实存在、可公开访问、与查询直接相关的网页，优先官方站点、' +
+  '文档、维基百科、MDN、标准组织与知名媒体。绝不捏造域名或路径；对不确定的结果直接省略。' +
+  '(2) title 不超过 10 个词，snippet 是一句不超过 22 个词的事实性描述，二者均使用与查询相同的语言。' +
+  '(3) 逐个输出完整对象，每个对象占一行。(4) 数组前后不要有任何文字。';
+const RELATED_SYSTEM =
+  '你建议后续的网页搜索。只输出一个原始 JSON 数组，包含 4 个简短的搜索查询字符串，' +
+  '语言与用户查询相同。不要 markdown、不要代码块、不要散文、不要对象。';
+
+async function streamChat(messages, options, onDelta, signal) {
+  const res = await callAPI(Object.assign({ messages: messages, stream: true }, options), signal);
+  const ct = (res.headers && res.headers.get && res.headers.get('content-type')) || '';
+  if (res.body && ct.indexOf('text/event-stream') !== -1) {
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder('utf-8');
+    let buffer = '', done = false;
+    while (!done) {
+      const chunk = await reader.read();
+      done = chunk.done;
+      if (chunk.value) buffer += decoder.decode(chunk.value, { stream: !done });
+      buffer = buffer.replace(/\r\n/g, '\n');
+      let cut;
+      while ((cut = buffer.indexOf('\n\n')) !== -1) {
+        const packet = buffer.slice(0, cut);
+        buffer = buffer.slice(cut + 2);
+        for (const line of packet.split('\n')) {
+          if (line.indexOf('data:') !== 0) continue;
+          const payload = line.slice(5).trim();
+          if (!payload || payload === '[DONE]') continue;
+          let obj;
+          try { obj = JSON.parse(payload); } catch (e) { continue; }
+          if (obj.error && obj.error.message) throw new Error(obj.error.message);
+          const d = obj.choices && obj.choices[0] && obj.choices[0].delta && obj.choices[0].delta.content;
+          if (d) onDelta(d);
+        }
+      }
+    }
+    return;
+  }
+  /* non-streaming fallback (some proxies buffer and return JSON) */
+  const j = await res.json();
+  const text = (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || '';
+  if (text) onDelta(text);
+}
+
+function cleanUrl(raw) {
+  try {
+    const u = new URL(String(raw).trim());
+    if (u.protocol !== 'http:' && u.protocol !== 'https:') return null;
+    if (!/^[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,}$/i.test(u.hostname)) return null;
+    if (/\s/.test(u.href)) return null;
+    return u.href;
+  } catch (e) { return null; }
+}
+function normalizeItems(list) {
+  const seen = Object.create(null), results = [];
+  for (const item of (Array.isArray(list) ? list : [])) {
+    if (!item || typeof item !== 'object') continue;
+    const url = cleanUrl(item.url);
+    if (!url) continue;
+    const u = new URL(url);
+    const key = u.hostname.replace(/^www\./, '') + u.pathname;
+    if (seen[key]) continue;
+    seen[key] = 1;
+    const title = String(item.title || '').trim().slice(0, 180);
+    const snippet = String(item.snippet || '').trim().slice(0, 420);
+    if (!title || !snippet) continue;
+    results.push({ title: title, url: url, snippet: snippet });
+    if (results.length >= Math.max(3, Math.min(10, settings.resultCount))) break;
+  }
+  return results;
+}
+function stripFences(t) {
+  return String(t || '').replace(/```(?:json)?/gi, '').trim();
+}
+function extractObjects(str) {
+  const out = [];
+  const re = /\{[^{}]*\}/g;
+  let m;
+  while ((m = re.exec(str)) !== null) {
+    try {
+      const o = JSON.parse(m[0]);
+      if (o && typeof o === 'object') out.push(o);
+    } catch (e) { /* object is still being streamed */ }
+  }
+  return out;
+}
+function isResultObject(o) {
+  return o && typeof o.title === 'string' && typeof o.url === 'string' && typeof o.snippet === 'string';
+}
+function scanItems(text) {
+  return extractObjects(stripFences(text)).filter(isResultObject);
+}
+function parsePayload(text, query) {
+  const str = stripFences(text);
+  const all = extractObjects(str);
+  let obj = null;
+  const s = str.indexOf('{'), e = str.lastIndexOf('}');
+  if (s !== -1 && e > s) { try { obj = JSON.parse(str.slice(s, e + 1)); } catch (err) { /* not a single object */ } }
+
+  let resultsRaw = (obj && Array.isArray(obj.results)) ? obj.results : [];
+  if (!resultsRaw.length) resultsRaw = all.filter(isResultObject);
+
+  let relatedRaw = (obj && Array.isArray(obj.related)) ? obj.related : [];
+  if (!relatedRaw.length) {
+    relatedRaw = all
+      .filter((o) => typeof o.query === 'string' || typeof o.text === 'string')
+      .map((o) => o.query || o.text);
+  }
+  if (!relatedRaw.length) {
+    const arrays = str.match(/\[\s*"(?:[^"\\]|\\.)*"\s*(?:,\s*"(?:[^"\\]|\\.)*"\s*)*\]/g) || [];
+    for (const a of arrays) {
+      try {
+        const arr = JSON.parse(a);
+        if (Array.isArray(arr) && arr.length > 1 && arr.every((x) => typeof x === 'string')) relatedRaw = arr;
+      } catch (err) { /* noop */ }
+    }
+  }
+  const related = relatedRaw
+    .map((x) => {
+      if (typeof x === 'string') return x;
+      if (x && typeof x === 'object') return x.query || x.text || x.title || '';
+      return '';
+    })
+    .filter((x) => x.trim() && x.trim().toLowerCase() !== String(query).toLowerCase())
+    .map((x) => x.trim().slice(0, 120)).slice(0, 6);
+  return { results: normalizeItems(resultsRaw), related: related };
+}
+async function streamResults(query, onItems, signal) {
+  let buf = '', lastBraces = 0;
+  await streamChat([
+    { role: 'system', content: RESULTS_SYSTEM }, { role: 'user', content: query }
+  ], { temperature: 0.35, max_tokens: 1500 }, (d) => {
+    buf += d;
+    const braces = (buf.match(/\}/g) || []).length;
+    if (braces !== lastBraces) {
+      lastBraces = braces;
+      const items = scanItems(buf);
+      if (items.length) onItems(items, false);
+    }
+  }, signal);
+  const final = parsePayload(buf, query);
+  onItems(final.results.length ? final.results : scanItems(buf), true);
+}
+async function fetchRelated(query, signal) {
+  const res = await callAPI({
+    model: settings.model,
+    messages: [{ role: 'system', content: RELATED_SYSTEM }, { role: 'user', content: query }],
+    stream: false, temperature: 0.4, max_tokens: 200
+  }, signal);
+  const j = await res.json();
+  const text = (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || '';
+  const str = stripFences(text);
+  let arr = [];
+  const s = str.indexOf('['), e = str.lastIndexOf(']');
+  if (s !== -1 && e > s) { try { arr = JSON.parse(str.slice(s, e + 1)); } catch (err) { /* noop */ } }
+  if (!Array.isArray(arr) || !arr.length) arr = extractObjects(str).map((o) => o.query || o.text || '');
+  return arr
+    .map((x) => typeof x === 'string' ? x : (x && typeof x === 'object' ? (x.query || x.text || '') : ''))
+    .filter((x) => x.trim() && x.trim().toLowerCase() !== String(query).toLowerCase())
+    .map((x) => x.trim().slice(0, 120)).slice(0, 6);
+}
+
+/* ---------------- rendering ---------------- */
+function siteInfo(url) {
+  let host = '', crumb = '';
+  try {
+    const u = new URL(url);
+    host = u.hostname.replace(/^www\./, '');
+    let parts = [];
+    try { parts = decodeURIComponent(u.pathname).split('/').filter(Boolean).slice(0, 2); }
+    catch (e) { parts = u.pathname.split('/').filter(Boolean).slice(0, 2); }
+    crumb = host + (parts.length ? ' \u203a ' + parts.join(' \u203a ') : '');
+  } catch (e) { host = 'web'; crumb = url; }
+  const skipSub = /^(www|en|m|mobile|docs|developer|dev|blog|news|support|help|api|mail|ftp|static|cdn|shop|store|wiki|login|my|www2)$/i;
+  const labels = host.split('.');
+  while (labels.length > 2 && skipSub.test(labels[0])) labels.shift();
+  const name = labels[0].replace(/[-_]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+  let h = 0;
+  for (const c of host) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  const hue = h % 360;
+  return { name: name, crumb: crumb, host: host, letter: (name[0] || 'W').toUpperCase(),
+    bg: 'hsl(' + hue + ',48%,93%)', fg: 'hsl(' + hue + ',45%,32%)' };
+}
+function renderResults(items) {
+  if (!items.length) {
+    $('#results-list').innerHTML = '<div class="hit"><div class="hit-snippet">没有找到与该查询相关的结果。请尝试更换关键词。</div></div>';
+    return;
+  }
+  $('#results-list').innerHTML = items.map((r) => {
+    const s = siteInfo(r.url);
+    return '<div class="hit">' +
+      '<div class="hit-site"><span class="favicon" style="background:' + s.bg + ';color:' + s.fg + '">' + esc(s.letter) +
+        '<img class="fav-img" alt="" data-host="' + esc(s.host) + '" src="https://favicon.im/' + esc(s.host) + '?larger=true"></span>' +
+      '<span class="site-meta"><span class="site-name">' + esc(s.name) + '</span>' +
+      '<span class="site-url">' + esc(s.crumb) + '</span></span></div>' +
+      '<a class="hit-title" href="' + esc(r.url) + '" target="_blank" rel="noopener noreferrer">' + esc(r.title) + '</a>' +
+      '<div class="hit-url-classic">' + esc(r.url) + '</div>' +
+      '<div class="hit-snippet">' + esc(r.snippet) + '</div></div>';
+  }).join('');
+  $$('.fav-img', $('#results-list')).forEach((img) => {
+    const swap = () => {
+      if (img.dataset.fb || !img.isConnected) return;
+      if (img.complete && img.naturalWidth > 0) return;
+      img.dataset.fb = '1';
+      img.src = 'https://www.google.com/s2/favicons?sz=32&domain=' + img.dataset.host;
+    };
+    img.addEventListener('error', function () {
+      if (this.dataset.fb) this.style.display = 'none';
+      else swap();
+    });
+    setTimeout(swap, 1500);
+  });
+}
+function renderRelated(items) {
+  const box = $('#related');
+  if (!items.length) { box.hidden = true; return; }
+  $('#related-list').innerHTML = items.map((q) => '<a class="chip" data-q="' + esc(q) + '">' + esc(q) + '</a>').join('');
+  box.hidden = false;
+}
+function renderStat(count, seconds) {
+  const secs = seconds || '0.00';
+  const q = esc(state.query);
+  if (settings.era === '2025') {
+    $('#stat').innerHTML = count
+      ? '约 ' + count + ' 条结果（' + secs + ' 秒）'
+      : '未找到结果（' + secs + ' 秒）';
+  } else {
+    $('#stat').innerHTML = count
+      ? '第 <b>1 - ' + count + '</b> 项，约 <b>' + count + '</b> 条结果，关键词 <b>' + q + '</b>。用时 ' + secs + ' 秒。'
+      : '未找到 <b>' + q + '</b> 的相关结果。用时 ' + secs + ' 秒。';
+  }
+}
+function showError(message, target) {
+  const html = '<div class="errorbox"><div class="eh">搜索未能完成。</div>' +
+    '<div class="detail">' + esc(message) + '</div>' +
+    '<button class="gbtn sm" type="button" id="retry-btn">重试</button></div>';
+  $(target).innerHTML = html;
+  $('#retry-btn').addEventListener('click', () => runSearch(state.query));
+}
+
+/* ---------------- search flow ---------------- */
+async function runSearch(q) {
+  q = String(q || '').trim().slice(0, 500);
+  if (!q) { showHome(); return; }
+
+  if (state.controller) { try { state.controller.abort(); } catch (e) { /* noop */ } }
+  const controller = new AbortController();
+  state.controller = controller;
+  const runId = ++state.runId;
+  const isCurrent = () => runId === state.runId && !controller.signal.aborted;
+
+  state.query = q; state.results = []; state.related = []; state.lastSeconds = null;
+  state.startedAt = performance.now();
+
+  const wantSummary = settings.summaryOn === true;
+  /* Instant path: a cached answer renders synchronously with zero network. */
+  const cached = cacheRead(q);
+  if (cached) {
+    showResults(q);
+    $('#overview-body').innerHTML = (wantSummary && cached.overview) ? formatText(cached.overview) : '';
+    state.results = cached.results || [];
+    state.related = cached.related || [];
+    renderResults(state.results);
+    renderRelated(state.related);
+    state.lastSeconds = '0.00';
+    renderStat(state.results.length, '0.00');
+    return;
+  }
+
+  showResults(q);
+  $('#stat').textContent = '正在检索索引……';
+  $('#overview-body').innerHTML = wantSummary
+    ? '<div class="loading">正在汇总结果<span id="dots"></span> <span class="caret"></span></div>' : '';
+  $('#results-list').innerHTML = '';
+  $('#related').hidden = true;
+  let dotTick = 0;
+  const dotTimer = setInterval(() => {
+    if (!isCurrent()) { clearInterval(dotTimer); return; }
+    const d = $('#dots'); if (d) d.textContent = '.'.repeat((dotTick++ % 3) + 1);
+  }, 350);
+
+  let raw = '', paintPending = false;
+  const paint = () => {
+    paintPending = false;
+    if (!isCurrent()) return;
+    $('#overview-body').innerHTML = formatText(raw) + '<span class="caret"></span>';
+  };
+  const schedulePaint = () => { if (!paintPending) { paintPending = true; requestAnimationFrame(paint); } };
+
+  let overviewErr = null, resultsErr = null;
+
+  const p1 = wantSummary ? streamChat([
+    { role: 'system', content: overviewSystem() }, { role: 'user', content: q }
+  ], { temperature: 0.7, max_tokens: settings.overview === 'detailed' ? 700 : 400 }, (delta) => {
+    if (!isCurrent()) return;
+    if (!raw) $('#overview-body').innerHTML = '';
+    raw += delta; schedulePaint();
+  }, controller.signal).then(() => {
+    if (!isCurrent()) return;
+    $('#overview-body').innerHTML = raw.trim() ? formatText(raw) : '<div class="a-p">暂无摘要。</div>';
+  }).catch((e) => { if (isCurrent()) overviewErr = e; }) : Promise.resolve();
+
+  const p2 = streamResults(q, (items, done) => {
+    if (!isCurrent()) return;
+    const list = normalizeItems(items);
+    if (list.length !== state.results.length || done) {
+      state.results = list;
+      renderResults(list);
+    }
+  }, controller.signal).catch((e) => { if (isCurrent()) resultsErr = e; });
+
+  const p3 = fetchRelated(q, controller.signal).then((list) => {
+    if (!isCurrent()) return;
+    state.related = list; renderRelated(list);
+  }).catch(() => { /* suggestions are optional */ });
+
+  /* Only the overview + results gate the timer; related chips finish in background. */
+  await Promise.all([p1, p2]);
+  clearInterval(dotTimer);
+  if (!isCurrent()) return;
+
+  const seconds = ((performance.now() - state.startedAt) / 1000).toFixed(2);
+  state.lastSeconds = seconds;
+  renderStat(state.results.length, seconds);
+  if (state.results.length && !overviewErr && !resultsErr) {
+    cacheWrite(q, state.results, state.related, $('#overview-body').textContent.trim());
+  }
+
+  if (overviewErr && resultsErr && !state.results.length) {
+    showError(overviewErr.message || String(overviewErr), '#overview-body');
+    $('#results-list').innerHTML = '';
+  } else if (resultsErr && !state.results.length) {
+    showError(resultsErr.message || String(resultsErr), '#results-list');
+  } else if (overviewErr) {
+    showError(overviewErr.message || String(overviewErr), '#overview-body');
+  }
+}
+
+/* ---------------- modal ---------------- */
+function openModal(title, body, foot) {
+  $('#modal-title').textContent = title;
+  $('#modal-body').innerHTML = body;
+  $('#modal-foot').innerHTML = foot;
+  $('#modal-backdrop').hidden = false;
+}
+function closeModal() { $('#modal-backdrop').hidden = true; }
+
+/* ---------------- custom animated dropdown ---------------- */
+function createDropdown(options, currentValue, onSelect) {
+  const wrap = document.createElement('div');
+  wrap.className = 'dd';
+  const trigger = document.createElement('button');
+  trigger.type = 'button';
+  trigger.className = 'dd-trigger';
+  trigger.setAttribute('aria-haspopup', 'listbox');
+  trigger.setAttribute('aria-expanded', 'false');
+  const val = document.createElement('span');
+  val.className = 'dd-value';
+  const cur = options.filter(function (o) { return o.value === currentValue; })[0] || options[0];
+  val.textContent = cur ? cur.label : '';
+  const arrow = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  arrow.setAttribute('class', 'dd-arrow icon');
+  arrow.setAttribute('viewBox', '0 0 24 24');
+  const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+  use.setAttribute('href', '#i-chevron');
+  arrow.appendChild(use);
+  trigger.appendChild(val); trigger.appendChild(arrow);
+
+  const menu = document.createElement('div');
+  menu.className = 'dd-menu';
+  menu.setAttribute('role', 'listbox');
+  (options || []).forEach(function (o, i) {
+    const item = document.createElement('div');
+    item.className = 'dd-item' + (o.value === currentValue ? ' selected' : '');
+    item.setAttribute('role', 'option');
+    item.textContent = o.label;
+    item.style.transitionDelay = (i * 28) + 'ms';
+    item.addEventListener('click', function () {
+      val.textContent = o.label;
+      menu.querySelectorAll('.dd-item').forEach(function (x) { x.classList.remove('selected'); });
+      item.classList.add('selected');
+      close();
+      if (typeof onSelect === 'function') onSelect(o.value);
+    });
+    menu.appendChild(item);
+  });
+  wrap.appendChild(trigger); wrap.appendChild(menu);
+
+  function outside(e) { if (!wrap.contains(e.target)) close(); }
+  function close() { wrap.classList.remove('open'); trigger.setAttribute('aria-expanded', 'false'); document.removeEventListener('click', outside); }
+  function open() { wrap.classList.add('open'); trigger.setAttribute('aria-expanded', 'true'); document.addEventListener('click', outside); }
+  trigger.addEventListener('click', function (e) {
+    e.preventDefault(); e.stopPropagation();
+    if (wrap.classList.contains('open')) close(); else open();
+  });
+  return wrap;
+}
+
+function openSettings() {
+  const eraOpts = [
+    { value: '2025', label: '2025 - 现代 Hyper' },
+    { value: '1998', label: '1998 - 经典 Hyper' },
+    { value: '1993', label: '1993 - 早期网页' }
+  ];
+  const ovOpts = [
+    { value: 'short', label: '简短' },
+    { value: 'detailed', label: '详细' }
+  ];
+  const sumOpts = [
+    { value: 'off', label: '关闭（默认）' },
+    { value: 'on', label: '开启' }
+  ];
+  let eraVal = settings.era, ovVal = settings.overview;
+  let sumVal = settings.summaryOn === true ? 'on' : 'off';
+  const bgNow = getCookie(COOKIE_BG) || '';
+  const presets = [
+    { v: '', label: '默认', css: '#ffffff' },
+    { v: 'color:#0f172a', label: '深蓝', css: '#0f172a' },
+    { v: 'color:#1a0d2e', label: '深紫', css: '#1a0d2e' },
+    { v: 'color:#0b3d2e', label: '墨绿', css: '#0b3d2e' },
+    { v: 'color:#3a0d0d', label: '暗红', css: '#3a0d0d' },
+    { v: 'image:https://picsum.photos/1600/900?grayscale&blur=2', label: '风景', css: 'linear-gradient(135deg,#4b6cb7,#182848)' }
+  ];
+  const body =
+    '<p class="field-title">外观</p>' +
+    '<label><span class="lbl">界面</span><div id="set-era-host" class="dd-host"></div></label>' +
+    '<label><span class="lbl">每页结果数</span><input id="set-count" type="number" min="3" max="10" value="' +
+      Math.max(3, Math.min(10, Number(settings.resultCount) || 8)) + '"></label>' +
+    '<label><span class="lbl">搜索摘要（默认关闭）</span><div id="set-summary-host" class="dd-host"></div></label>' +
+    '<label><span class="lbl">概览长度（摘要开启时有效）</span><div id="set-overview-host" class="dd-host"></div></label>' +
+    '<hr class="rule field-sep">' +
+    '<p class="field-title">自定义背景（实时预览，值保存在 Cookie）</p>' +
+    '<div class="bg-chips" id="bg-chips"></div>' +
+    '<div class="bg-row"><input type="color" id="bg-color" value="' + (bgNow.indexOf('color:') === 0 ? bgNow.slice(6) : '#1a73e8') + '">' +
+      '<input type="text" id="bg-image" placeholder="背景图片 URL（可选）" value="' + (bgNow.indexOf('image:') === 0 ? esc(bgNow.slice(6)) : '') + '"></div>' +
+    '<div class="btnrow"><button class="gbtn sm" type="button" id="bg-apply">应用背景</button>' +
+      '<button class="gbtn sm" type="button" id="bg-reset">恢复默认</button></div>' +
+    '<div class="bg-preview" id="bg-preview"></div>' +
+    '<hr class="rule field-sep">' +
+    '<p class="note" style="margin-top:0">已预填默认 API 密钥，下列接口项可按需自定义。</p>' +
+    '<label><span class="lbl">API 密钥</span><input id="set-apikey" type="password" value="' +
+      esc(settings.apiKey) + '" spellcheck="false" autocomplete="off"></label>' +
+    '<label><span class="lbl">模型（model）</span><input id="set-model" type="text" value="' +
+      esc(settings.model) + '" spellcheck="false"></label>' +
+    '<label><span class="lbl">调用地址（endpoint，chat/completions 完整 URL）</span><input id="set-endpoint" type="text" value="' +
+      esc(baseEndpoint()) + '" spellcheck="false"></label>' +
+    '<label><span class="lbl">CORS 代理（可选，占位符用 %s；用于绕开跨域）</span><input id="set-proxy" type="text" value="' +
+      esc(settings.corsProxy || '') + '" spellcheck="false" placeholder="https://your-proxy.example.com/?url=%s"></label>' +
+    '<div class="btnrow"><button class="gbtn sm" type="button" id="set-test">测试连接</button>' +
+      '<span id="test-result" class="note"></span></div>' +
+    '<hr class="rule field-sep">' +
+    '<p class="field-title">网站 SEO（写入页面 meta，保存在 Cookie）</p>' +
+    '<label><span class="lbl">网页标题（title）</span><input id="set-seo-title" type="text" value="' +
+      esc(settings.seoTitle || 'Hyper') + '" spellcheck="false"></label>' +
+    '<label><span class="lbl">网站描述（description）</span><input id="set-seo-desc" type="text" value="' +
+      esc(settings.seoDescription || '') + '" spellcheck="false"></label>' +
+    '<label><span class="lbl">关键词（keywords，逗号分隔）</span><input id="set-seo-kw" type="text" value="' +
+      esc(settings.seoKeywords || '') + '" spellcheck="false"></label>';
+  openModal('Hyper 设置', body,
+    '<button class="gbtn primary" type="button" id="set-save">保存</button>' +
+    '<button class="gbtn" type="button" id="set-cancel">取消</button>');
+
+  // animated custom dropdowns (replace native <select>)
+  $('#set-era-host').appendChild(createDropdown(eraOpts, eraVal, function (v) { eraVal = v; }));
+  $('#set-overview-host').appendChild(createDropdown(ovOpts, ovVal, function (v) { ovVal = v; }));
+  $('#set-summary-host').appendChild(createDropdown(sumOpts, sumVal, function (v) { sumVal = v; }));
+
+  // background section
+  const chips = $('#bg-chips');
+  function paintBgPreview(v) {
+    const pv = $('#bg-preview');
+    if (!v) { pv.style.background = '#fff'; return; }
+    if (v.indexOf('image:') === 0) {
+      const url = v.slice(6);
+      pv.style.backgroundImage = 'linear-gradient(rgba(0,0,0,.25),rgba(0,0,0,.25)),url("' + url + '")';
+      pv.style.backgroundSize = 'cover'; pv.style.backgroundPosition = 'center';
+    } else if (v.indexOf('color:') === 0) {
+      pv.style.backgroundImage = 'none'; pv.style.backgroundColor = v.slice(6);
+    } else { pv.style.backgroundImage = 'none'; pv.style.backgroundColor = v; }
+  }
+  presets.forEach(function (p) {
+    const c = document.createElement('div');
+    c.className = 'bg-chip' + (p.v === bgNow ? ' sel' : '');
+    c.style.background = p.css; c.title = p.label;
+    c.addEventListener('click', function () {
+      chips.querySelectorAll('.bg-chip').forEach(function (x) { x.classList.remove('sel'); });
+      c.classList.add('sel');
+      setBackground(p.v);
+      $('#bg-image').value = p.v.indexOf('image:') === 0 ? p.v.slice(6) : '';
+      $('#bg-color').value = p.v.indexOf('color:') === 0 ? p.v.slice(6) : '#1a73e8';
+      paintBgPreview(p.v);
+    });
+    chips.appendChild(c);
+  });
+  paintBgPreview(bgNow);
+  $('#bg-apply').addEventListener('click', function () {
+    const img = ($('#bg-image').value || '').trim();
+    const col = ($('#bg-color').value || '').trim();
+    const v = img ? 'image:' + img : (col ? 'color:' + col : '');
+    setBackground(v);
+    chips.querySelectorAll('.bg-chip').forEach(function (x) { x.classList.remove('sel'); });
+    paintBgPreview(v);
+    toast('背景已保存（Cookie）。');
+  });
+  $('#bg-reset').addEventListener('click', function () {
+    setBackground('');
+    $('#bg-image').value = ''; $('#bg-color').value = '#1a73e8';
+    chips.querySelectorAll('.bg-chip').forEach(function (x) { x.classList.remove('sel'); });
+    paintBgPreview('');
+    toast('已恢复默认背景。');
+  });
+
+  $('#set-save').addEventListener('click', () => {
+    settings.era = ['2025', '1998', '1993'].indexOf(eraVal) === -1 ? '2025' : eraVal;
+    settings.resultCount = Math.max(3, Math.min(10, Number($('#set-count').value) || 8));
+    settings.summaryOn = sumVal === 'on';
+    settings.overview = ovVal === 'detailed' ? 'detailed' : 'short';
+    settings.apiKey = ($('#set-apikey').value || '').trim() || DEFAULT_API_KEY;
+    settings.model = ($('#set-model').value || '').trim() || 'glm-4-flash';
+    settings.endpoint = ($('#set-endpoint').value || '').trim() || GATEWAY_ENDPOINT;
+    settings.corsProxy = ($('#set-proxy').value || '').trim();
+    settings.seoTitle = ($('#set-seo-title').value || '').trim() || 'Hyper';
+    settings.seoDescription = ($('#set-seo-desc').value || '').trim();
+    settings.seoKeywords = ($('#set-seo-kw').value || '').trim();
+    setEra(settings.era); applySummary(); applySEO(); persist(); closeModal();
+    if (state.query && !$('#results').hidden) renderRelated(state.related);
+  });
+  $('#set-cancel').addEventListener('click', closeModal);
+
+  const testResult = $('#test-result');
+  $('#set-test').addEventListener('click', async () => {
+    const key = ($('#set-apikey').value || '').trim() || DEFAULT_API_KEY;
+    const model = ($('#set-model').value || '').trim() || 'glm-4-flash';
+    const endpoint = ($('#set-endpoint').value || '').trim() || GATEWAY_ENDPOINT;
+    const proxy = ($('#set-proxy').value || '').trim();
+    testResult.style.color = '#5f6368';
+    testResult.textContent = '测试中…';
+    const savedEP = settings.endpoint, savedKey = settings.apiKey, savedModel = settings.model, savedProxy = settings.corsProxy;
+    settings.endpoint = endpoint; settings.apiKey = key; settings.model = model; settings.corsProxy = proxy;
+    try {
+      const r = await callAPI({
+        model: model,
+        messages: [{ role: 'user', content: 'ping' }],
+        stream: false, temperature: 0.2, max_tokens: 16
+      }, null);
+      const j = await r.json();
+      const text = (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || '';
+      testResult.style.color = '#188038';
+      testResult.textContent = '连接成功：' + (text.slice(0, 40) || '(空响应)');
+    } catch (e) {
+      testResult.style.color = '#c5221f';
+      testResult.textContent = '失败：' + (e.message || e).slice(0, 80);
+    } finally {
+      settings.endpoint = savedEP; settings.apiKey = savedKey; settings.model = savedModel; settings.corsProxy = savedProxy;
+    }
+  });
+}
+
+function openHelp() {
+  const body =
+    '<p class="k">搜索</p>' +
+    '<p>输入查询后按回车。先出现概览，随后是网页结果与相关搜索。每条结果标题都是真实的外链，' +
+    '点击会在新标签页打开该页面。</p>' +
+    '<p class="k">API 与调用</p>' +
+    '<p>本页默认通过可用的网关以兼容 OpenAI 格式的接口向 AI 发起请求。若因跨域(CORS)被拦截，' +
+    '可在左上角设置里填入一个支持转发鉴权头的 CORS 代理，或改用你自己的调用地址。</p>' +
+    '<p class="k">界面视图</p>' +
+    '<p><b>2025</b> 复刻当前布局：圆角搜索框、分类标签、AI 概览卡片、favicon 行与结果片段。' +
+    '<b>1998</b> 复刻原版首页与结果列表。<b>1993</b> 以早期浏览器风格渲染：灰色画布、衬线字体与斜角边框。</p>' +
+    '<p class="k">自定义</p>' +
+    '<p>左上角齿轮按钮打开设置，可自定义 <b>API 密钥</b>、<b>模型</b>、<b>调用地址</b> 与可选的 <b>CORS 代理</b>，' +
+    '也支持切换界面年代、每页结果数、概览长度，以及 <b>自定义背景</b>（颜色或图片，实时预览并写入 Cookie）。' +
+    '下拉框均带有展开动画。</p>' +
+    '<p class="k">快捷键</p>' +
+    '<p><code>/</code> 聚焦搜索框 &nbsp; <code>Enter</code> 搜索 &nbsp; ' +
+    '<code>Esc</code> 关闭本窗口 &nbsp; 浏览器后退返回上一条查询。</p>';
+  openModal('帮助', body, '<button class="gbtn primary" type="button" id="help-close">关闭</button>');
+  $('#help-close').addEventListener('click', closeModal);
+}
+
+/* ---------------- actionable controls ---------------- */
+const SCOPES = { all: '', web: '', images: 'images of ', videos: 'videos about ', news: 'news about ',
+  groups: 'discussion about ', directory: 'directory of ', books: 'books about ',
+  scholar: 'research on ', maps: 'map of ', shopping: 'shopping for ' };
+const INFO = {
+  about: ['关于', '本页是 Hyper 三个时代的单文件复刻。搜索通过设置中配置的接口完成：' +
+    '它撰写概览、给出真实外链并建议后续查询。', 'https://hyperx.com/', '关于 Hyper'],
+  store: ['Hyper 商店', 'Hyper 是一个真实品牌；本复刻没有商店或结算功能——下方链接打开官网。', 'https://hyperx.com/', '打开 Hyper'],
+  support: ['支持', 'Hyper 是真实品牌；本复刻是一个非官方的界面演示，没有支持门户。', 'https://hyperx.com/pages/support', '打开 Hyper 支持'],
+  advertising: ['广告', '本页不投放任何广告。', 'https://hyperx.com/', '访问 Hyper'],
+  business: ['商务', '这是一个个人、非商业的复刻。', 'https://hyperx.com/', '访问 Hyper'],
+  how: ['搜索如何运作', '每次查询并行发起三次请求：流式概览、流式真实外链列表，以及简短的相关查询列表。' +
+    '本页的耗时与结果数来自这些实时响应。', 'https://hyperx.com/', 'Hyper 搜索如何运作'],
+  privacy: ['隐私', '你的查询仅发往设置中配置的接口。界面偏好、背景与登录态保存在本浏览器 Cookie（并镜像到 localStorage）。' +
+    '本页无分析、无第三方追踪。', 'https://hyperx.com/', 'Hyper 隐私政策'],
+  terms: ['条款', '按原样提供，仅供个人与演示使用。你自行提供 API 密钥；切勿将密钥公开写入本 HTML 文件之外的地方。', 'https://hyperx.com/', 'Hyper 服务条款']
+};
+let toastTimer = null;
+function toast(msg) {
+  let t = $('#toast');
+  if (!t) { t = document.createElement('div'); t.id = 'toast'; document.body.appendChild(t); }
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 3400);
+}
+function wireA11y(root) {
+  $$('[data-action]', root || document).forEach((el) => {
+    if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '0');
+    const tag = el.tagName.toLowerCase();
+    if (tag !== 'button' && tag !== 'a') el.setAttribute('role', 'button');
+  });
+}
+function openPanel(title, body, foot) {
+  openModal(title, body, foot || '<button class="gbtn primary" type="button" data-action="close">关闭</button>');
+  wireA11y($('#modal'));
+}
+function openInfo(topic) {
+  const d = INFO[topic] || INFO.about;
+  openPanel(d[0], '<p class="panel-p">' + esc(d[1]) + '</p>' +
+    '<p class="panel-ext"><a href="' + esc(d[2]) + '" target="_blank" rel="noopener noreferrer">' +
+    esc(d[3]) + ' \u2197</a></p>');
+}
+function openApps() {
+  const item = (action, label, extra) => '<button type="button" data-action="' + action + '"' + (extra || '') + '>' + label + '</button>';
+  openPanel('Hyper 应用', '<p class="panel-p">下方每个快捷键都会在本页执行真实操作。</p>' +
+    '<div class="app-grid">' +
+    item('home', '搜索') + item('scope', '图片', ' data-scope="images"') + item('settings', '设置') +
+    item('help', '帮助') + item('lens', '图片搜索') + item('account', '账户') +
+    item('era', '2025 视图', ' data-era="2025"') + item('era', '1998 视图', ' data-era="1998"') +
+    item('era', '1993 视图', ' data-era="1993"') + '</div>');
+}
+function accountPrefs() {
+  try {
+    const ck = getCookie(COOKIE_ACCOUNT);
+    if (ck) return JSON.parse(ck) || {};
+    return JSON.parse(localStorage.getItem('gsearch.account') || '{}') || {};
+  } catch (e) { return {}; }
+}
+function paintAccount() {
+  const p = accountPrefs();
+  $$('.avatar').forEach((a) => { a.textContent = p.initial || 'H'; if (p.color) a.style.background = p.color; });
+}
+function openAccount() {
+  const p = accountPrefs();
+  const loggedIn = !!getCookie(COOKIE_SESSION);
+  openPanel('账户', '<p class="panel-p">本应用通过登录页进入；当前' + (loggedIn ? '已处于登录状态。' : '尚未登录（可前往登录页登录）。') +
+    '你可以自定义结果头部显示的头像。</p>' +
+    '<div class="panel-row"><label>首字母 <input id="acct-initial" maxlength="2" value="' + esc(p.initial || 'H') + '"></label>' +
+    '<label>颜色 <input id="acct-color" type="color" value="' + esc(p.color || '#E60023') + '"></label>' +
+    '<button type="button" data-action="save-account">保存</button></div>' +
+    '<div class="panel-row"><button type="button" data-action="logout">退出登录</button>' +
+    '<button type="button" data-action="login">前往登录页</button></div>');
+}
+function saveAccount() {
+  const p = { initial: ($('#acct-initial').value || 'G').trim().slice(0, 2) || 'G', color: $('#acct-color').value };
+  setCookie(COOKIE_ACCOUNT, JSON.stringify(p), 365);
+  try { localStorage.setItem('gsearch.account', JSON.stringify(p)); } catch (e) { /* noop */ }
+  paintAccount(); closeModal(); toast('头像已更新。');
+}
+function regionPref() {
+  try { return getCookie(COOKIE_REGION) || localStorage.getItem('gsearch.region') || '中国'; } catch (e) { return '中国'; }
+}
+function paintRegion() { $$('.region-label').forEach((el) => { el.textContent = regionPref(); }); }
+function openRegion() {
+  const list = ['中国', '美国', '日本', '英国', '德国', '法国', '新加坡'];
+  const cur = regionPref();
+  openPanel('地区', '<p class="panel-p">选择页脚显示的地区。这是保存在本浏览器中的本地显示偏好。</p><div class="panel-row"><label>地区 <div id="region-host" class="dd-host"></div></label><button type="button" data-action="save-region">保存</button></div>');
+  $('#region-host').appendChild(createDropdown(list.map((r) => ({ value: r, label: r })), cur, null));
+}
+function saveRegion() {
+  const v = ($('#region-host') && $('#region-host .dd-value')) ? $('#region-host .dd-value').textContent : regionPref();
+  setCookie(COOKIE_REGION, v, 365);
+  try { localStorage.setItem('gsearch.region', v); } catch (e) { /* noop */ }
+  paintRegion(); closeModal(); toast('地区已更新。');
+}
+function openLens() {
+  openPanel('按图搜索', '<p class="panel-p">选择一张图片在本地预览。本页没有图片索引，你可以用文件名搜索，或打开真正的 Lens。</p>' +
+    '<div class="panel-row"><input type="file" id="lens-file" accept="image/*"></div>' +
+    '<div class="lens-preview" id="lens-preview"></div>' +
+    '<div class="panel-row"><button type="button" data-action="lens-name">用文件名搜索</button></div>' +
+    '<p class="panel-ext"><a href="https://lens.google.com/" target="_blank" rel="noopener noreferrer">打开 Lens \u2197</a></p>');
+  $('#lens-file').addEventListener('change', function () {
+    const f = this.files && this.files[0]; const box = $('#lens-preview'); if (!box) return;
+    box.innerHTML = '';
+    if (!f) return;
+    const img = document.createElement('img'); img.alt = '所选图片预览';
+    img.src = URL.createObjectURL(f); img.onload = () => URL.revokeObjectURL(img.src);
+    box.appendChild(img);
+    const cap = document.createElement('span'); cap.textContent = f.name; box.appendChild(cap);
+  });
+}
+function startVoice(el) {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) { toast('当前浏览器不支持语音输入。'); return; }
+  const input = visibleInput(); if (!input) return;
+  let rec; try { rec = new SR(); } catch (e) { toast('语音输入无法启动。'); return; }
+  rec.lang = navigator.language || 'zh-CN'; rec.interimResults = false; rec.maxAlternatives = 1;
+  el.classList.add('listening'); toast('正在聆听……请说话。');
+  rec.onresult = (e) => {
+    const text = e.results[0][0].transcript; input.value = text;
+    if (text.trim()) submitQuery(text);
+  };
+  rec.onerror = (e) => toast('语音输入：' + (e.error || '失败'));
+  rec.onend = () => el.classList.remove('listening');
+  try { rec.start(); } catch (e) { el.classList.remove('listening'); toast('语音输入无法启动。'); }
+}
+function stripScope(q) {
+  let base = String(q || '').trim();
+  Object.keys(SCOPES).forEach((k) => {
+    const p = SCOPES[k]; if (p && base.toLowerCase().indexOf(p) === 0) base = base.slice(p.length);
+  });
+  return base;
+}
+function applyScope(scope, fromTab) {
+  if (!state.query) { toast('请先输入查询，再选择分类。'); const b = visibleInput(); if (b) b.focus(); return; }
+  const q = (SCOPES[scope] || '') + stripScope(state.query);
+  submitQuery(q);
+}
+function openMore() {
+  const item = (scope, label) => '<button type="button" data-action="scope" data-scope="' + scope + '">' + label + '</button>';
+  openPanel('更多搜索类型', '<p class="panel-p">选择一项将以该焦点重新运行当前查询。</p>' +
+    '<div class="app-grid">' + item('books', '书籍') + item('scholar', '学术') +
+    item('maps', '地图') + item('shopping', '购物') + item('news', '新闻') + item('all', '全部网页') + '</div>');
+}
+function openTools() {
+  const countOpts = [3, 4, 5, 6, 7, 8, 9, 10].map((n) => ({ value: String(n), label: String(n) }));
+  const ovOpts = [
+    { value: 'short', label: '简短' },
+    { value: 'detailed', label: '详细' }
+  ];
+  openPanel('搜索工具', '<p class="panel-p">这些设置保存在本浏览器（Cookie），并应用于下一次搜索。</p>' +
+    '<div class="panel-row"><label>结果 <div id="tool-count-host" class="dd-host"></div></label>' +
+    '<label>概览 <div id="tool-overview-host" class="dd-host"></div></label>' +
+    '<button type="button" data-action="save-tools">保存并重搜</button></div>');
+  $('#tool-count-host').appendChild(createDropdown(countOpts, String(settings.resultCount), null));
+  $('#tool-overview-host').appendChild(createDropdown(ovOpts, settings.overview, null));
+}
+function saveTools() {
+  const cv = ($('#tool-count-host') && $('#tool-count-host .dd-value')) ? $('#tool-count-host .dd-value').textContent : '';
+  const ov = ($('#tool-overview-host') && $('#tool-overview-host .dd-value')) ? $('#tool-overview-host .dd-value').textContent : '简短';
+  settings.resultCount = Number(cv) || 8;
+  settings.overview = ov === '详细' ? 'detailed' : 'short';
+  persist(); closeModal();
+  if (state.query) submitQuery(state.query); else toast('搜索工具已保存。');
+}
+function handleAction(action, el) {
+  switch (action) {
+    case 'close': closeModal(); break;
+    case 'settings': openSettings(); break;
+    case 'help': openHelp(); break;
+    case 'home': closeModal(); location.hash = ''; break;
+    case 'info': openInfo(el.getAttribute('data-topic')); break;
+    case 'apps': openApps(); break;
+    case 'account': openAccount(); break;
+    case 'save-account': saveAccount(); break;
+    case 'region': openRegion(); break;
+    case 'save-region': saveRegion(); break;
+    case 'lens': openLens(); break;
+    case 'lens-name': {
+      const f = $('#lens-file') && $('#lens-file').files[0];
+      if (!f) { toast('请先选择一张图片。'); break; }
+      const name = f.name.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ').trim();
+      closeModal(); if (name) submitQuery(name); else toast('文件名为空。');
+      break;
+    }
+    case 'voice': startVoice(el); break;
+    case 'focus': { const b = visibleInput(); if (b) b.focus(); break; }
+    case 'submit': { const b = visibleInput(); const v = b ? b.value.trim() : ''; if (!v) toast('请输入内容后再搜索。'); submitQuery(v); break; }
+    case 'tab': applyScope(el.getAttribute('data-scope'), true); break;
+    case 'scope': closeModal(); applyScope(el.getAttribute('data-scope'), false); break;
+    case 'more': openMore(); break;
+    case 'tools': openTools(); break;
+    case 'save-tools': saveTools(); break;
+    case 'era': setEra(el.getAttribute('data-era')); closeModal(); break;
+    case 'login': closeModal(); location.href = 'login.html'; break;
+    case 'logout': logout(); break;
+    default: break;
+  }
+}
+function logout() {
+  deleteCookie(COOKIE_SESSION);
+  try { localStorage.removeItem('hyper.session'); } catch (e) {}
+  closeModal(); paintAccount(); showHome();
+}
+/* ---------------- events ---------------- */
+$('#home-form').addEventListener('submit', (e) => { e.preventDefault(); submitQuery($('#home-input').value); });
+$('#res-form').addEventListener('submit', (e) => { e.preventDefault(); submitQuery($('#res-input').value); });
+$('#res-prefs').addEventListener('click', (e) => { e.preventDefault(); openSettings(); });
+$('#res-settings').addEventListener('click', (e) => { e.preventDefault(); openSettings(); });
+$('#res-help').addEventListener('click', (e) => { e.preventDefault(); openHelp(); });
+$('#modal-backdrop').addEventListener('click', (e) => { if (e.target === $('#modal-backdrop')) closeModal(); });
+document.addEventListener('click', (e) => {
+  const link = e.target.closest('a[data-q]');
+  if (!link) return;
+  e.preventDefault(); submitQuery(link.getAttribute('data-q'));
+});
+document.addEventListener('click', (e) => {
+  const el = e.target.closest && e.target.closest('[data-action]');
+  if (!el) return;
+  e.preventDefault();
+  handleAction(el.getAttribute('data-action'), el);
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') { closeModal(); return; }
+  if ((e.key === 'Enter' || e.key === ' ') && !/^(INPUT|TEXTAREA|SELECT|BUTTON)$/.test(document.activeElement.tagName)) {
+    const el = document.activeElement.closest && document.activeElement.closest('[data-action]');
+    if (el) { e.preventDefault(); handleAction(el.getAttribute('data-action'), el); return; }
+  }
+  if (e.key === '/' && !/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)) {
+    const box = visibleInput();
+    if (box) { e.preventDefault(); box.focus(); box.select(); }
+  }
+});
+window.addEventListener('hashchange', () => {
+  const q = readHashQuery();
+  if (q) runSearch(q);
+  else { if (state.controller) state.controller.abort(); state.query = ''; showHome(); }
+});
+
+/* ---------------- boot ---------------- */
+loadBackground();                 // apply custom background stored in cookie
+applySEO();                       // apply saved SEO meta / title
+applySummary();                   // summary is opt-in, hidden by default
+wireA11y(); paintAccount(); paintRegion();
+
+/* Login is optional (sign-in-when-you-want, like Google). The session cookie is
+   read only to personalize the avatar; the search page is fully usable without it. */
+function getSession() {
+  try { return getCookie(COOKIE_SESSION) || localStorage.getItem('hyper.session') || ''; } catch (e) { return getCookie(COOKIE_SESSION) || ''; }
+}
+const eraParam = new URLSearchParams(location.search).get('era');
+setEra(['2025', '1998', '1993'].indexOf(eraParam) !== -1 ? eraParam : settings.era);
+const initialQuery = readHashQuery();
+if (initialQuery) runSearch(initialQuery);
+else showHome();
+</script>
+</body>
+</html>
